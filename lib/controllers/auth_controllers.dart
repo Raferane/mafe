@@ -7,9 +7,9 @@ class AuthController extends GetxController {
   final _user = Rxn<User>();
   final _isPasswordVisible = true.obs;
 
-  bool get isLoading => _isLoading.value;
-  User? get user => _user.value;
-  bool get isPasswordVisible => _isPasswordVisible.value;
+  RxBool get isLoading => _isLoading;
+  Rxn<User> get user => _user;
+  RxBool get isPasswordVisible => _isPasswordVisible;
 
   // Email validation
   bool isValidEmail(String email) {

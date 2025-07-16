@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LoadingOverlay extends StatelessWidget {
-  final bool isLoading;
+  final RxBool isLoading;
   final Widget child;
 
   const LoadingOverlay({
@@ -15,11 +16,15 @@ class LoadingOverlay extends StatelessWidget {
     return Stack(
       children: [
         child,
-        if (isLoading)
-          Container(
-            color: Colors.black.withValues(alpha: 0.3),
-            child: const Center(child: CircularProgressIndicator()),
-          ),
+        Obx(
+          () =>
+              isLoading.value
+                  ? Container(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    child: const Center(child: CircularProgressIndicator()),
+                  )
+                  : const SizedBox.shrink(),
+        ),
       ],
     );
   }
