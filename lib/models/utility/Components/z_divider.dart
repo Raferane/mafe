@@ -10,23 +10,23 @@ class ZDivider extends StatelessWidget {
       children: [
         Expanded(
           child: Divider(
-            color: Colors.grey[400],
+            color: Color(0xff2c2c2c).withAlpha(140),
             indent: 20,
             endIndent: 10,
             thickness: 1.5,
           ),
         ),
         Text(
-          "OR",
+          "Or continue with",
           style: TextStyle(
-            color: Colors.grey[400],
+            color: Color(0xff2c2c2c).withAlpha(140),
             fontWeight: FontWeight.w400,
             fontSize: 18,
           ),
         ),
         Expanded(
           child: Divider(
-            color: Colors.grey,
+            color: Color(0xff2c2c2c).withAlpha(140),
             endIndent: 20,
             indent: 10,
             thickness: 1.5,

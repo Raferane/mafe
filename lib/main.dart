@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:unity_project/Views/Welcome/welcome_screen.dart';
 import 'package:unity_project/Views/home_screen.dart';
 import 'package:unity_project/Views/Login/login_screen.dart';
 import 'package:unity_project/Views/register/register_screen.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
           cursorColor: Colors.green,
         ),
       ),
-      initialRoute: '/login',
+      initialRoute: '/welcome',
       getPages: [
         GetPage(
           name: '/login',
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
           binding: AuthBindings(),
         ),
         GetPage(name: '/home', page: () => HomeScreen()),
+        GetPage(name: '/welcome', page: () => WelcomeScreen()),
       ],
     );
   }
