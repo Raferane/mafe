@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController extends GetxController {
   final _isLoading = false.obs;
@@ -118,6 +119,80 @@ class AuthController extends GetxController {
       Get.snackbar(
         'Error',
         "An unexpected error occurred",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red[100],
+        colorText: Colors.red[900],
+        duration: Duration(seconds: 3),
+      );
+      Get.log("Unexpected Error: $e");
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      _isLoading.value = true;
+
+      // Trigger the authentication flow
+      final GoogleSignIn signIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await signIn.signIn();
+      if (googleUser == null) {
+        _isLoading.value = false;
+        return;
+      }
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      Get.offAllNamed('/home');
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar(
+        'Error',
+        e.message ?? 'An error occurred during Google sign-in.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red[100],
+        colorText: Colors.red[900],
+        duration: Duration(seconds: 3),
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'An unexpected error occurred',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red[100],
+        colorText: Colors.red[900],
+        duration: Duration(seconds: 3),
+      );
+      Get.log("Unexpected Error: $e");
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  Future<void> signInAnonymously() async {
+    try {
+      _isLoading.value = true;
+      await FirebaseAuth.instance.signInAnonymously();
+      Get.offAllNamed('/home'); // or wherever you want to send the guest
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar(
+        'Error',
+        e.message ?? 'An error occurred during guest sign-in.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red[100],
+        colorText: Colors.red[900],
+        duration: Duration(seconds: 3),
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'An unexpected error occurred',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red[100],
         colorText: Colors.red[900],

@@ -93,6 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 30),
                 ZDivider(),
+
                 //TODO: Add the button for google login and add a guest Login Button.
               ],
             ),
