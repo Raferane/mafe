@@ -14,7 +14,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final AuthController controller = Get.put(AuthController());
+    final AuthController controller = Get.find<AuthController>();
 
     return Scaffold(
       body: SingleChildScrollView(

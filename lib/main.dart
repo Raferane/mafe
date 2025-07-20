@@ -47,7 +47,11 @@ class MyApp extends StatelessWidget {
           binding: AuthBindings(),
         ),
         GetPage(name: '/home', page: () => HomeScreen()),
-        GetPage(name: '/welcome', page: () => WelcomeScreen()),
+        GetPage(
+          name: '/welcome',
+          page: () => WelcomeScreen(),
+          binding: AuthBindings(),
+        ),
       ],
     );
   }
