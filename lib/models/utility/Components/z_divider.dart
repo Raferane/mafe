@@ -10,7 +10,7 @@ class ZDivider extends StatelessWidget {
       children: [
         Expanded(
           child: Divider(
-            color: Color(0xff2c2c2c).withAlpha(140),
+            color: Color(0xff545454).withAlpha(140),
             indent: 20,
             endIndent: 10,
             thickness: 1.5,
@@ -19,14 +19,14 @@ class ZDivider extends StatelessWidget {
         Text(
           "Or continue with",
           style: TextStyle(
-            color: Color(0xff2c2c2c).withAlpha(140),
+            color: Color(0xff545454).withAlpha(140),
             fontWeight: FontWeight.w400,
             fontSize: 18,
           ),
         ),
         Expanded(
           child: Divider(
-            color: Color(0xff2c2c2c).withAlpha(140),
+            color: Color(0xff545454).withAlpha(140),
             endIndent: 20,
             indent: 10,
             thickness: 1.5,
