@@ -7,10 +7,14 @@ class AuthController extends GetxController {
   final _isLoading = false.obs;
   final _user = Rxn<User>();
   final _isPasswordVisible = true.obs;
+  final _isRememberMe = false.obs;
+  final _isGuest = false.obs;
 
   RxBool get isLoading => _isLoading;
   Rxn<User> get user => _user;
   RxBool get isPasswordVisible => _isPasswordVisible;
+  RxBool get isRememberMe => _isRememberMe;
+  RxBool get isGuest => _isGuest;
 
   // Email validation
   bool isValidEmail(String email) {
@@ -90,7 +94,7 @@ class AuthController extends GetxController {
         email: email,
         password: password,
       );
-      Get.back();
+      Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       String message;
       switch (e.code) {

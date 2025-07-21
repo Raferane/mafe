@@ -23,32 +23,35 @@ class ZPasswordTextFormField extends StatelessWidget {
         },
         keyboardType: TextInputType.visiblePassword,
         decoration: InputDecoration(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.black),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Color(0xff545454).withAlpha(100)),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.black, width: 2),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: Color(0xff545454).withAlpha(100),
+              width: 2,
+            ),
           ),
           labelText: 'Password',
           floatingLabelBehavior: FloatingLabelBehavior.always,
           floatingLabelStyle: TextStyle(
             fontWeight: FontWeight.w700,
-            color: Colors.green[400],
-            fontSize: 20,
+            color: Color(0xff545454),
+            fontSize: 18,
           ),
-          hintText: 'Enter your password',
-          hintStyle: TextStyle(color: Colors.grey[400]),
+          hintText: '********',
+          hintStyle: TextStyle(color: Color(0xff545454).withAlpha(100)),
           suffixIcon: IconButton(
             onPressed: () {
               controller.togglePasswordVisibility();
             },
             icon:
                 controller.isPasswordVisible.value == true
-                    ? Icon(Icons.visibility_off, color: Colors.green[400])
-                    : Icon(Icons.visibility, color: Colors.green[400]),
+                    ? Icon(Icons.visibility_off, color: Color(0xff545454))
+                    : Icon(Icons.visibility, color: Color(0xff545454)),
           ),
         ),
         validator: (value) {

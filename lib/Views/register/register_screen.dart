@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:unity_project/Views/Login/components/z_password_text_form_field.dart';
+import 'package:unity_project/Views/Welcome/components/z_sign_up_button.dart';
+import 'package:unity_project/models/utility/Components/z_confirm_password_field.dart';
+import 'package:unity_project/models/utility/Components/z_email_text_form_field.dart';
+import 'package:unity_project/models/utility/Components/z_password_text_form_field.dart';
 import 'package:unity_project/controllers/auth_controllers.dart';
 import 'package:unity_project/models/utility/Components/loading_overlay.dart';
 
@@ -15,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final AuthController controller = Get.find<AuthController>();
   final registerEmailController = TextEditingController();
   final registerPasswordController = TextEditingController();
+  final registerConfirmPasswordController = TextEditingController();
   final registerFormKey = GlobalKey<FormState>();
 
   @override
@@ -31,118 +35,99 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final width = size.width;
     final height = size.height;
     return Scaffold(
-      appBar: AppBar(elevation: 5, shadowColor: Colors.black),
+      appBar: AppBar(backgroundColor: Colors.transparent),
       body: LoadingOverlay(
         isLoading: controller.isLoading,
-        child: Form(
-          key: registerFormKey,
-          child: Center(
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  'Register',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: TextFormField(
-                    controller: registerEmailController,
-                    onTapOutside: (event) {
-                      controller.unfocusKeyboard();
-                    },
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.green, width: 2),
-                      ),
-                      labelText: 'Email',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      floatingLabelStyle: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.green[400],
-                        fontSize: 20,
-                      ),
-                      hintText: 'Enter your email',
-                      hintStyle: TextStyle(color: Colors.grey[400]),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.05,
+              vertical: height * 0.02,
+            ),
+            child: Form(
+              key: registerFormKey,
+              child: Column(
+                children: [
+                  SizedBox(height: height * 0.05),
+                  Text(
+                    'Welcome to Unity Volunteer',
+                    style: TextStyle(
+                      fontSize: width * 0.06,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff545454),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Email field is required";
-                      }
-                      if (!controller.isValidEmail(value)) {
-                        return "Please enter a valid email address";
-                      }
-                      return null;
-                    },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 20,
-                    bottom: 5,
+                  Text(
+                    'Register a new account',
+                    style: TextStyle(
+                      fontSize: width * 0.045,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff545454),
+                    ),
                   ),
-                  child: ZPasswordTextFormField(
+                  SizedBox(height: height * 0.1),
+                  ZEmailTextFormField(
+                    loginEmailController: registerEmailController,
+                    controller: controller,
+                  ),
+                  SizedBox(height: height * 0.04),
+                  ZPasswordTextFormField(
                     loginPasswordController: registerPasswordController,
                     controller: controller,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  SizedBox(height: height * 0.04),
+                  ZConfirmPasswordField(
+                    confirmPasswordController:
+                        registerConfirmPasswordController,
+                    controller: controller,
+                    registerPasswordController: registerPasswordController,
+                  ),
+                  SizedBox(height: height * 0.01),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        'Already have an account?',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.green[400],
-                            fontWeight: FontWeight.w700,
+                      Obx(
+                        () => Checkbox(
+                          activeColor: Color(0xff545454),
+                          checkColor: Color(0xffedf2f4),
+                          side: BorderSide(
+                            color: Color(0xff545454).withAlpha(100),
                           ),
+                          value: controller.isRememberMe.value,
+                          onChanged: (value) {
+                            controller.isRememberMe.value = value ?? false;
+                          },
+                        ),
+                      ),
+                      Text(
+                        'Remember me',
+                        style: TextStyle(
+                          fontSize: width * 0.04,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff545454),
                         ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 20),
-                MaterialButton(
-                  onPressed: () async {
-                    //TODO: Check if the email and password are valid By Firebase and implement the logic
-                    if (registerFormKey.currentState!.validate()) {
-                      controller.register(
-                        registerEmailController.text,
-                        registerPasswordController.text,
-                      );
-                    }
-                  },
-                  color: Colors.green[500],
-                  textColor: Colors.white,
-                  minWidth: 300,
-                  height: 45,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  SizedBox(height: height * 0.05),
+                  ZSignUpButton(
+                    text: 'Sign In',
+                    bColor: Color(0xff545454),
+                    fColor: Color(0xffedf2f4),
+                    fontWeight: FontWeight.w500,
+                    fontSize: width * 0.045,
+                    onPressed: () {
+                      if (registerFormKey.currentState!.validate()) {
+                        controller.register(
+                          registerEmailController.text,
+                          registerPasswordController.text,
+                        );
+                      }
+                    },
+                    size: Size(width * 0.7, height * 0.05),
                   ),
-                  child: Text('Register', style: TextStyle(fontSize: 18)),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
