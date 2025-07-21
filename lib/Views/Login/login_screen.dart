@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:unity_project/Views/Welcome/components/z_sign_in_button.dart';
 import 'package:unity_project/controllers/auth_controllers.dart';
 import 'package:unity_project/models/utility/Components/loading_overlay.dart';
-import 'package:unity_project/models/utility/Components/z_divider.dart';
-import 'package:unity_project/Views/Login/components/z_email_text_form_field.dart';
-import 'package:unity_project/models/utility/Components/z_submit_button.dart';
-import 'package:unity_project/Views/Login/components/z_password_text_form_field.dart';
+import 'package:unity_project/models/utility/Components/z_email_text_form_field.dart';
+import 'package:unity_project/models/utility/Components/z_password_text_form_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -35,67 +34,92 @@ class _LoginScreenState extends State<LoginScreen> {
     final height = size.height;
 
     return Scaffold(
-      appBar: AppBar(elevation: 5, shadowColor: Colors.black),
+      appBar: AppBar(backgroundColor: Colors.transparent),
       body: LoadingOverlay(
         isLoading: controller.isLoading,
         child: SingleChildScrollView(
-          child: Form(
-            key: loginFormKey,
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  'Login',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: ZEmailTextFormField(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.05,
+              vertical: height * 0.02,
+            ),
+            child: Form(
+              key: loginFormKey,
+              child: Column(
+                children: [
+                  SizedBox(height: height * 0.05),
+                  Text(
+                    'Welcome Back',
+                    style: TextStyle(
+                      fontSize: width * 0.06,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff545454),
+                    ),
+                  ),
+                  Text(
+                    'Login to your account',
+                    style: TextStyle(
+                      fontSize: width * 0.045,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff545454),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.1),
+                  ZEmailTextFormField(
                     loginEmailController: loginEmailController,
                     controller: controller,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: ZPasswordTextFormField(
+                  SizedBox(height: height * 0.04),
+                  ZPasswordTextFormField(
                     loginPasswordController: loginPasswordController,
                     controller: controller,
                   ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(right: 30),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: const Color.fromRGBO(102, 187, 106, 1),
-                        textStyle: TextStyle(fontWeight: FontWeight.w700),
+                  SizedBox(height: height * 0.01),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Obx(
+                        () => Checkbox(
+                          activeColor: Color(0xff545454),
+                          checkColor: Color(0xffedf2f4),
+                          side: BorderSide(
+                            color: Color(0xff545454).withAlpha(100),
+                          ),
+                          value: controller.isRememberMe.value,
+                          onChanged: (value) {
+                            controller.isRememberMe.value = value ?? false;
+                          },
+                        ),
                       ),
-                      onPressed: () => Get.toNamed('/register'),
-                      child: Text('Register Now'),
-                    ),
+                      Text(
+                        'Remember me',
+                        style: TextStyle(
+                          fontSize: width * 0.04,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff545454),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: 40),
-                ZSubmitButton(
-                  onPressed: () {
-                    //TODO: Check if the email and password are valid By Firebase and implement the logic
-                    if (loginFormKey.currentState!.validate()) {
-                      controller.login(
-                        loginEmailController.text.trim(),
-                        loginPasswordController.text,
-                      );
-                    }
-                  },
-                  text: 'Login',
-                ),
-                SizedBox(height: 30),
-                ZDivider(),
-
-                //TODO: Add the button for google login and add a guest Login Button.
-              ],
+                  SizedBox(height: height * 0.05),
+                  ZSignInButton(
+                    text: 'Sign In',
+                    bColor: Color(0xff545454),
+                    fColor: Color(0xffedf2f4),
+                    fontWeight: FontWeight.w500,
+                    fontSize: width * 0.045,
+                    onPressed: () {
+                      if (loginFormKey.currentState!.validate()) {
+                        controller.login(
+                          loginEmailController.text,
+                          loginPasswordController.text,
+                        );
+                      }
+                    },
+                    size: Size(width * 0.7, height * 0.05),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
