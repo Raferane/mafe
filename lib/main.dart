@@ -8,6 +8,7 @@ import 'package:unity_project/routes/pages.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
