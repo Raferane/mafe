@@ -40,6 +40,7 @@ dependencies:
   google_sign_in: ^6.1.5
   carousel_slider: ^5.1.1
   salomon_bottom_bar: ^3.3.2
+  cloud_firestore: ^5.6.12
 
 dev_dependencies:
   flutter_test:
