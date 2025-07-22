@@ -274,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
-                            Get.offAllNamed('/login');
+                            Get.offAllNamed('/welcome');
                           },
                           child: Text('Logout'),
                         ),

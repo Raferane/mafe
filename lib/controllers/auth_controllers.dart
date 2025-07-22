@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:unity_project/models/services/user_service.dart';
+import 'package:unity_project/models/user/app_user.dart';
 
 class AuthController extends GetxController {
   final _isLoading = false.obs;
@@ -15,6 +17,7 @@ class AuthController extends GetxController {
   RxBool get isPasswordVisible => _isPasswordVisible;
   RxBool get isRememberMe => _isRememberMe;
   RxBool get isGuest => _isGuest;
+  User? get currentUser => FirebaseAuth.instance.currentUser;
 
   // Email validation
   bool isValidEmail(String email) {
@@ -44,6 +47,7 @@ class AuthController extends GetxController {
         email: email,
         password: password,
       );
+      await Get.find<UserService>().fetchUser(currentUser!.uid);
       Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       String message;
@@ -90,10 +94,16 @@ class AuthController extends GetxController {
   void register(String email, String password) async {
     try {
       _isLoading.value = true;
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      final userService = Get.find<UserService>();
+      final newUser = AppUser(
+        uid: userCredential.user!.uid,
         email: email,
-        password: password,
+        isAdmin: false,
+        createdAt: DateTime.now(),
       );
+      await userService.createUser(newUser);
       Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       String message;
@@ -154,6 +164,15 @@ class AuthController extends GetxController {
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
+      final userService = Get.find<UserService>();
+      final newUser = AppUser(
+        uid: googleUser.id,
+        email: googleUser.email,
+        isAdmin: false,
+        createdAt: DateTime.now(),
+      );
+      userService.createUser(newUser);
+      await userService.createUser(newUser);
       Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
