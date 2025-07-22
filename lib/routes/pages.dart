@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:unity_project/Views/Admin_panel/admin_panel_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/Favorites/favorites_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/edit_profile_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/profile_screen.dart';
@@ -8,6 +9,7 @@ import 'package:unity_project/Views/Welcome/welcome_screen.dart';
 import 'package:unity_project/Views/Login/login_screen.dart';
 import 'package:unity_project/Views/register/register_screen.dart';
 import 'package:unity_project/Views/home_screen.dart';
+import 'package:unity_project/Views/settings/settings_screen.dart';
 import 'package:unity_project/models/bindings/auth_bindings.dart';
 import 'package:unity_project/middleware/auth_middleware.dart';
 import 'package:unity_project/models/bindings/edit_profile_binding.dart';
@@ -43,4 +45,6 @@ final List<GetPage> appPages = [
     page: () => EditProfileScreen(),
     binding: EditProfileBinding(),
   ),
+  GetPage(name: AppRoutes.adminpanel, page: () => AdminPanelScreen()),
+  GetPage(name: AppRoutes.settings, page: () => SettingsScreen()),
 ];
