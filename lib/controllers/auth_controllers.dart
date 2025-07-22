@@ -43,11 +43,9 @@ class AuthController extends GetxController {
   void login(String email, String password) async {
     try {
       _isLoading.value = true;
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      await Get.find<UserService>().fetchUser(currentUser!.uid);
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      await Get.find<UserService>().fetchUser(userCredential.user!.uid);
       Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       String message;
