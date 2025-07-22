@@ -6,6 +6,7 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:unity_project/Views/Bottom_screens/Favorites/favorites_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/profile_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/search/search_screen.dart';
+import 'package:unity_project/routes/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -72,7 +73,15 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Icon(Icons.settings),
               title: Text('Settings'),
               onTap: () {
-                Navigator.pop(context);
+                Get.toNamed(AppRoutes.settings);
+              },
+            ),
+            SizedBox(height: height * 0.03),
+            ListTile(
+              leading: Icon(Icons.admin_panel_settings),
+              title: Text('Admin Panel'),
+              onTap: () {
+                Get.toNamed(AppRoutes.adminpanel);
               },
             ),
             SizedBox(height: height * 0.03),
@@ -93,8 +102,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: height * 0.15),
             ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
+              leading: Icon(Icons.logout, color: Colors.red),
+              title: Text(
+                'Logout',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: width * 0.04,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               onTap: () {
                 FirebaseAuth.instance.signOut();
                 Get.offAllNamed('/welcome');
