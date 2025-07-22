@@ -38,6 +38,8 @@ dependencies:
   firebase_auth: ^5.6.0
   get: ^4.7.2
   google_sign_in: ^6.1.5
+  carousel_slider: ^5.1.1
+  salomon_bottom_bar: ^3.3.2
 
 dev_dependencies:
   flutter_test:
