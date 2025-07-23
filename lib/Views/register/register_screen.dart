@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unity_project/Views/Welcome/components/z_sign_up_button.dart';
+import 'package:unity_project/Views/register/components/display_name_text_field.dart';
 import 'package:unity_project/models/utility/Components/z_confirm_password_field.dart';
 import 'package:unity_project/models/utility/Components/z_email_text_form_field.dart';
 import 'package:unity_project/models/utility/Components/z_password_text_form_field.dart';
@@ -19,6 +20,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final registerEmailController = TextEditingController();
   final registerPasswordController = TextEditingController();
   final registerConfirmPasswordController = TextEditingController();
+  final registerDisplayNameController = TextEditingController();
   final registerFormKey = GlobalKey<FormState>();
 
   @override
@@ -68,6 +70,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: height * 0.1),
                   ZEmailTextFormField(
                     loginEmailController: registerEmailController,
+                    controller: controller,
+                  ),
+                  SizedBox(height: height * 0.04),
+                  DisplayNameTextField(
+                    displayNameController: registerDisplayNameController,
                     controller: controller,
                   ),
                   SizedBox(height: height * 0.04),

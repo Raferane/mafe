@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:unity_project/models/services/user_service.dart';
+import 'package:unity_project/models/services/app_service.dart';
 import 'package:unity_project/models/user/app_user.dart';
 
 class AuthController extends GetxController {
@@ -39,13 +39,17 @@ class AuthController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
+  bool isValidName(String name) {
+    return name.length >= 3;
+  }
+
   // LOGIN into the firebase auth
   void login(String email, String password) async {
     try {
       _isLoading.value = true;
       final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      await Get.find<UserService>().fetchUser(userCredential.user!.uid);
+      await Get.find<AppService>().fetchUser(userCredential.user!.uid);
       Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       String message;
@@ -94,7 +98,7 @@ class AuthController extends GetxController {
       _isLoading.value = true;
       final UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      final userService = Get.find<UserService>();
+      final userService = Get.find<AppService>();
       final newUser = AppUser(
         uid: userCredential.user!.uid,
         email: email,
@@ -162,15 +166,16 @@ class AuthController extends GetxController {
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
-      final userService = Get.find<UserService>();
+      final userService = Get.find<AppService>();
       final newUser = AppUser(
         uid: googleUser.id,
         email: googleUser.email,
         isAdmin: false,
+        displayName: googleUser.displayName,
         createdAt: DateTime.now(),
       );
-      userService.createUser(newUser);
       await userService.createUser(newUser);
+      await userService.fetchUser(googleUser.id);
       Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       Get.snackbar(

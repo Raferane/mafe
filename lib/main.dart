@@ -1,14 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:unity_project/models/services/user_service.dart';
+import 'package:unity_project/models/services/app_service.dart';
 import 'package:unity_project/routes/app_routes.dart';
 import 'package:unity_project/routes/pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  Get.put(UserService(), permanent: true);
+  Get.put(AppService(), permanent: true);
 
   runApp(const MyApp());
 }
