@@ -9,5 +9,6 @@ class AppRoutes {
   static const String favorites = '/favorites';
   static const String adminpanel = '/adminpanel';
   static const String settings = '/settings';
+  static const String createEventScreen = '/createEventScreen';
   static const String editProfile = '/editProfile';
 }
