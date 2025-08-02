@@ -2,10 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:unity_project/Views/Bottom_screens/Favorites/favorites_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/profile_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/search/search_screen.dart';
+import 'package:unity_project/controllers/auth_controllers.dart';
 import 'package:unity_project/routes/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -113,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () {
                 FirebaseAuth.instance.signOut();
+
                 Get.offAllNamed('/welcome');
               },
             ),
@@ -290,6 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
+                            GoogleSignIn().signOut();
                             Get.offAllNamed('/welcome');
                           },
                           child: Text('Logout'),

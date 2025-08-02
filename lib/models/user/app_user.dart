@@ -6,6 +6,7 @@ class AppUser {
   final String? displayName;
   final bool isAdmin;
   final DateTime createdAt;
+  final bool isBanned;
 
   AppUser({
     required this.uid,
@@ -13,6 +14,7 @@ class AppUser {
     this.displayName,
     required this.isAdmin,
     required this.createdAt,
+    required this.isBanned,
   });
 
   factory AppUser.fromFirestore(
@@ -26,6 +28,7 @@ class AppUser {
       displayName: data?['displayName'],
       isAdmin: data?['isAdmin'] ?? false,
       createdAt: (data?['createdAt'] as Timestamp).toDate(),
+      isBanned: data?['isBanned'] ?? false,
     );
   }
 
@@ -36,6 +39,7 @@ class AppUser {
       if (displayName != null) 'displayName': displayName,
       'isAdmin': isAdmin,
       'createdAt': createdAt,
+      'isBanned': isBanned,
     };
   }
 }

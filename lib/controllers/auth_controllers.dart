@@ -100,6 +100,7 @@ class AuthController extends GetxController {
         email: email,
         isAdmin: false,
         createdAt: DateTime.now(),
+        isBanned: false,
       );
       await userService.createUser(newUser);
       Get.offAllNamed('/home');
@@ -168,6 +169,7 @@ class AuthController extends GetxController {
         email: googleUser.email,
         isAdmin: false,
         createdAt: DateTime.now(),
+        isBanned: false,
       );
       userService.createUser(newUser);
       await userService.createUser(newUser);

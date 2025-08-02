@@ -13,6 +13,7 @@ class AdminPanelScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+
           title: Text(
             'Admin Panel',
             style: TextStyle(
@@ -32,7 +33,12 @@ class AdminPanelScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: AdminTabBarView(),
+        body: FutureBuilder(
+          future: Future.delayed(Duration(seconds: 1)),
+          builder: (context, asyncSnapshot) {
+            return AdminTabBarView();
+          },
+        ),
       ),
     );
   }
