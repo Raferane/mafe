@@ -25,10 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // List of your asset images for carousel
   final List<String> carouselImages = [
-    'assets/unity_volunteer_logo_noBackground.png',
-    'assets/unity_volunteer_logo_background.png',
-    'assets/unity_volunteer.png',
-    'assets/google_icon.png',
+    'assets/connect_carousel_slider.png',
+    'assets/give_carousel_slider.png',
+    'assets/grow_carousel_slider.png',
+    'assets/support_carousel_slider.png',
+    'assets/impact_carousel_slider.png',
   ];
 
   // Add this variable to track carousel position
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 'Unite.Volunteer. Impact.',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xffedf2f4),
                   fontSize: width * 0.06,
                   fontWeight: FontWeight.w400,
                 ),
@@ -99,6 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text('Logout'),
               onTap: () {
                 FirebaseAuth.instance.signOut();
+                GoogleSignIn().signOut();
+                Get.find<AppService>().clearUser();
                 Get.offAllNamed('/welcome');
               },
             ),
@@ -117,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 fontSize: width * 0.05,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Color(0xff545454),
               ),
             ),
             SizedBox(width: 6),
@@ -154,11 +157,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   margin: EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xffedf2f4),
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withAlpha(20),
+                        color: Color(0xff545454).withAlpha(50),
                         blurRadius: 10,
                         offset: Offset(0, 2),
                       ),
@@ -166,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: TextField(
                     controller: _searchController,
+                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
                     decoration: InputDecoration(
                       hintText: 'Search for events, activities...',
                       hintStyle: TextStyle(
@@ -194,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 // Carousel Slider
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  margin: EdgeInsets.symmetric(horizontal: 4),
                   child: CarouselSlider(
                     options: CarouselOptions(
                       height: 200.0,
@@ -204,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       autoPlayCurve: Curves.fastOutSlowIn,
                       enableInfiniteScroll: true,
                       autoPlayAnimationDuration: Duration(milliseconds: 800),
-                      viewportFraction: 0.6,
+                      viewportFraction: 0.9,
                       onPageChanged: (index, reason) {
                         setState(() {
                           _currentCarouselIndex = index;
@@ -256,34 +260,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             shape: BoxShape.circle,
                             color:
                                 _currentCarouselIndex == entry.key
-                                    ? Colors.green[700] // Active indicator
-                                    : Colors.grey[500], // Inactive indicator
+                                    ? Color(0xff545454) // Active indicator
+                                    : Colors.grey[400], // Inactive indicator
                           ),
                         );
                       }).toList(),
-                ),
-                // Your existing content
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      children: [
-                        MaterialButton(
-                          color: Colors.red,
-                          textColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onPressed: () {
-                            FirebaseAuth.instance.signOut();
-                            GoogleSignIn().signOut();
-                            Get.find<AppService>().clearUser();
-                            Get.offAllNamed('/welcome');
-                          },
-                          child: Text('Logout'),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
               ],
             ),

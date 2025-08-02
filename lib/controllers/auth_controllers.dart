@@ -93,7 +93,12 @@ class AuthController extends GetxController {
   }
 
   // REGISTER into the firebase auth
-  void register(String email, String password) async {
+  void register(
+    String email,
+    String password,
+    String city,
+    String displayName,
+  ) async {
     try {
       _isLoading.value = true;
       final UserCredential userCredential = await FirebaseAuth.instance
@@ -102,8 +107,11 @@ class AuthController extends GetxController {
       final newUser = AppUser(
         uid: userCredential.user!.uid,
         email: email,
+        displayName: displayName,
+        city: city,
         isAdmin: false,
         createdAt: DateTime.now(),
+        isGoogle: false,
       );
       await userService.createUser(newUser);
       Get.offAllNamed('/home');
@@ -165,17 +173,22 @@ class AuthController extends GetxController {
         idToken: googleAuth.idToken,
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      final firebaseUser = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
       final userService = Get.find<AppService>();
       final newUser = AppUser(
-        uid: googleUser.id,
+        uid: firebaseUser.user!.uid,
         email: googleUser.email,
+        city: "",
         isAdmin: false,
         displayName: googleUser.displayName,
         createdAt: DateTime.now(),
+        isGoogle: true,
       );
+      print("=======================firebase uid: ${firebaseUser.user!.uid}");
       await userService.createUser(newUser);
-      await userService.fetchUser(googleUser.id);
+      await userService.fetchUser(firebaseUser.user!.uid);
       Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       Get.snackbar(

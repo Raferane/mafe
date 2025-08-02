@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:unity_project/Views/Bottom_screens/profile/edit_profile_screen.dart';
 import 'package:unity_project/models/services/app_service.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -96,7 +97,13 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 24),
-                  ElevatedButton(onPressed: () {}, child: Text('Edit Profile')),
+                  ElevatedButton(
+                    onPressed: () {
+                      Get.to(() => EditProfileScreen());
+                      print(user.value?.email);
+                    },
+                    child: Text('Edit Profile'),
+                  ),
                   SizedBox(height: 24),
                   ListTile(
                     leading: Icon(Icons.settings),

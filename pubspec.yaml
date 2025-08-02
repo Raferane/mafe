@@ -66,9 +66,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/unity_volunteer.png
     - assets/unity_volunteer_logo_noBackground.png
     - assets/unity_volunteer_logo_background.png
+    - assets/connect_carousel_slider.png
+    - assets/grow_carousel_slider.png
+    - assets/impact_carousel_slider.png
+    - assets/support_carousel_slider.png
+    - assets/give_carousel_slider.png
     - assets/google_icon.png
   #   - images/a_dot_ham.jpeg
 

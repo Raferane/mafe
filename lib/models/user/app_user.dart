@@ -4,15 +4,19 @@ class AppUser {
   final String uid;
   final String email;
   final String? displayName;
+  final String city;
   final bool isAdmin;
   final DateTime createdAt;
+  final bool isGoogle;
 
   AppUser({
+    required this.city,
     required this.uid,
     required this.email,
     this.displayName,
     required this.isAdmin,
     required this.createdAt,
+    required this.isGoogle,
   });
 
   factory AppUser.fromFirestore(
@@ -24,8 +28,10 @@ class AppUser {
       uid: data?['uid'],
       email: data?['email'],
       displayName: data?['displayName'],
+      city: data?['city'],
       isAdmin: data?['isAdmin'] ?? false,
       createdAt: (data?['createdAt'] as Timestamp).toDate(),
+      isGoogle: data?['isGoogle'] ?? false,
     );
   }
 
@@ -34,8 +40,10 @@ class AppUser {
       'uid': uid,
       'email': email,
       if (displayName != null) 'displayName': displayName,
+      'city': city,
       'isAdmin': isAdmin,
       'createdAt': createdAt,
+      'isGoogle': isGoogle,
     };
   }
 }

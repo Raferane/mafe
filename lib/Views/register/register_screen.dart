@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unity_project/Views/Welcome/components/z_sign_up_button.dart';
 import 'package:unity_project/Views/register/components/display_name_text_field.dart';
+import 'package:unity_project/Views/register/components/z_drop_down_menu.dart';
 import 'package:unity_project/models/utility/Components/z_confirm_password_field.dart';
 import 'package:unity_project/models/utility/Components/z_email_text_form_field.dart';
 import 'package:unity_project/models/utility/Components/z_password_text_form_field.dart';
@@ -21,12 +22,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final registerPasswordController = TextEditingController();
   final registerConfirmPasswordController = TextEditingController();
   final registerDisplayNameController = TextEditingController();
+  final registerCityController = TextEditingController();
   final registerFormKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     registerEmailController.dispose();
     registerPasswordController.dispose();
+    registerConfirmPasswordController.dispose();
+    registerDisplayNameController.dispose();
+    registerCityController.dispose();
     registerFormKey.currentState?.dispose();
     super.dispose();
   }
@@ -89,6 +94,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: controller,
                     registerPasswordController: registerPasswordController,
                   ),
+                  SizedBox(height: height * 0.04),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: ZDropDownMenu(
+                      width: width,
+                      registerCityController: registerCityController,
+                      height: height,
+                    ),
+                  ),
                   SizedBox(height: height * 0.01),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -128,6 +142,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         controller.register(
                           registerEmailController.text,
                           registerPasswordController.text,
+                          registerCityController.text,
+                          registerDisplayNameController.text,
                         );
                       }
                     },
