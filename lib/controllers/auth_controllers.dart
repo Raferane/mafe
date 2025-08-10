@@ -9,12 +9,14 @@ class AuthController extends GetxController {
   final _isLoading = false.obs;
   final _user = Rxn<User>();
   final _isPasswordVisible = true.obs;
+  final _isConfirmPasswordVisible = true.obs;
   final _isRememberMe = false.obs;
   final _isGuest = false.obs;
 
   RxBool get isLoading => _isLoading;
   Rxn<User> get user => _user;
   RxBool get isPasswordVisible => _isPasswordVisible;
+  RxBool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
   RxBool get isRememberMe => _isRememberMe;
   RxBool get isGuest => _isGuest;
   User? get currentUser => FirebaseAuth.instance.currentUser;
@@ -32,6 +34,10 @@ class AuthController extends GetxController {
   // Toggle Suffix Icon to reveal password
   void togglePasswordVisibility() {
     _isPasswordVisible.value = !_isPasswordVisible.value;
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    _isConfirmPasswordVisible.value = !_isConfirmPasswordVisible.value;
   }
 
   // Unfocus Keyboard when tapping outside
@@ -186,7 +192,6 @@ class AuthController extends GetxController {
         createdAt: DateTime.now(),
         isGoogle: true,
       );
-      print("=======================firebase uid: ${firebaseUser.user!.uid}");
       await userService.createUser(newUser);
       await userService.fetchUser(firebaseUser.user!.uid);
       Get.offAllNamed('/home');

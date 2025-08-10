@@ -22,6 +22,7 @@ class ZDropDownMenu extends StatelessWidget {
       onSelected: (value) {
         registerCityController.text = value ?? '';
       },
+      initialSelection: registerCityController.text,
       menuStyle: MenuStyle(
         backgroundColor: WidgetStateProperty.all(Color(0xffedf2f4)),
         shape: WidgetStateProperty.all(

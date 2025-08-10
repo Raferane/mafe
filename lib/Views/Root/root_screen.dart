@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:unity_project/models/services/app_service.dart';
 
 class RootScreen extends StatelessWidget {
   const RootScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appService = Get.find<AppService>();
     // Use a FutureBuilder to check auth state
     return FutureBuilder(
       future: Future.delayed(
@@ -40,6 +42,7 @@ class RootScreen extends StatelessWidget {
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
           // User is logged in
+          appService.restoreUser();
           Future.microtask(() => Get.offAllNamed('/home'));
         } else {
           // User is not logged in

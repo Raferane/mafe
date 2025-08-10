@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:unity_project/Views/Bottom_screens/Favorites/favorites_screen.dart';
+import 'package:unity_project/Views/Bottom_screens/profile/edit_profile_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/profile_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/search/search_screen.dart';
 import 'package:unity_project/Views/Root/root_screen.dart';
@@ -9,6 +10,7 @@ import 'package:unity_project/Views/register/register_screen.dart';
 import 'package:unity_project/Views/home_screen.dart';
 import 'package:unity_project/models/bindings/auth_bindings.dart';
 import 'package:unity_project/middleware/auth_middleware.dart';
+import 'package:unity_project/models/bindings/edit_profile_binding.dart';
 import 'app_routes.dart';
 
 final List<GetPage> appPages = [
@@ -36,4 +38,9 @@ final List<GetPage> appPages = [
   GetPage(name: AppRoutes.profile, page: () => ProfileScreen()),
   GetPage(name: AppRoutes.search, page: () => SearchScreen()),
   GetPage(name: AppRoutes.favorites, page: () => FavoritesScreen()),
+  GetPage(
+    name: AppRoutes.editProfile,
+    page: () => EditProfileScreen(),
+    binding: EditProfileBinding(),
+  ),
 ];

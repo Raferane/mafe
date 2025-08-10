@@ -8,6 +8,7 @@ class AppUser {
   final bool isAdmin;
   final DateTime createdAt;
   final bool isGoogle;
+  final String? newTempEmail;
 
   AppUser({
     required this.city,
@@ -17,6 +18,7 @@ class AppUser {
     required this.isAdmin,
     required this.createdAt,
     required this.isGoogle,
+    this.newTempEmail,
   });
 
   factory AppUser.fromFirestore(
@@ -32,6 +34,7 @@ class AppUser {
       isAdmin: data?['isAdmin'] ?? false,
       createdAt: (data?['createdAt'] as Timestamp).toDate(),
       isGoogle: data?['isGoogle'] ?? false,
+      newTempEmail: data?['newTempEmail'],
     );
   }
 
@@ -44,6 +47,7 @@ class AppUser {
       'isAdmin': isAdmin,
       'createdAt': createdAt,
       'isGoogle': isGoogle,
+      if (newTempEmail != null) 'newTempEmail': newTempEmail,
     };
   }
 }

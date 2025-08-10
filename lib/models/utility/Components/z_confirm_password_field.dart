@@ -19,7 +19,7 @@ class ZConfirmPasswordField extends StatelessWidget {
     return Obx(
       () => TextFormField(
         controller: confirmPasswordController,
-        obscureText: controller.isPasswordVisible.value,
+        obscureText: controller.isConfirmPasswordVisible.value,
         onTapOutside: (event) {
           controller.unfocusKeyboard();
         },
@@ -48,7 +48,7 @@ class ZConfirmPasswordField extends StatelessWidget {
           hintStyle: TextStyle(color: Color(0xff545454).withAlpha(100)),
           suffixIcon: IconButton(
             onPressed: () {
-              controller.togglePasswordVisibility();
+              controller.toggleConfirmPasswordVisibility();
             },
             icon:
                 controller.isPasswordVisible.value == true
