@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unity_project/controllers/adminpanel_controller.dart';
-import 'package:unity_project/routes/app_routes.dart';
+import 'package:unity_project/Views/Admin_panel/admin_components/user_expansion_tile.dart';
+import 'package:unity_project/Views/Admin_panel/admin_components/event_expansion_tile.dart';
 
 class AdminTabBarView extends StatelessWidget {
   AdminTabBarView({super.key});
@@ -17,66 +18,24 @@ class AdminTabBarView extends StatelessWidget {
           child: Obx(
             () =>
                 adminPanelController.isLoading.value
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                       itemCount: adminPanelController.allUsers.length,
                       itemBuilder: (context, index) {
                         final user = adminPanelController.allUsers[index];
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          elevation: 4,
-                          child: ExpansionTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.green[100],
-                              child: Icon(
-                                Icons.person,
-                                color: Colors.green[700],
+                        return UserExpansionTile(
+                          user: user,
+                          onBanUser:
+                              () => adminPanelController.banUser(
+                                user.uid,
+                                !user.isBanned,
                               ),
-                            ),
-                            title: Text(user.displayName ?? ''),
-                            subtitle: Text(user.email),
-                            trailing: TextButton.icon(
-                              icon:
-                                  user.isBanned
-                                      ? Icon(
-                                        Icons.block,
-                                        color: Colors.green[400],
-                                      )
-                                      : Icon(
-                                        Icons.block,
-                                        color: Colors.red[400],
-                                      ),
-                              label: Text(
-                                user.isBanned ? 'Unban' : 'Ban',
-                                style: TextStyle(
-                                  color:
-                                      user.isBanned
-                                          ? Colors.green[400]
-                                          : Colors.red[400],
-                                ),
-                              ),
-                              onPressed: () {
-                                adminPanelController.banUser(
-                                  user.uid,
-                                  !user.isBanned,
-                                );
-                              },
-                            ),
-                            children: [
-                              ListTile(
-                                title: Text('Created At: ${user.createdAt}'),
-                                // Add more info here
-                              ),
-                              // Add ban/unban buttons or other actions here
-                            ],
-                          ),
                         );
                       },
                     ),
           ),
         ),
+
         // Events Tab
         Stack(
           children: [
@@ -87,28 +46,11 @@ class AdminTabBarView extends StatelessWidget {
                   itemCount: adminPanelController.allEvents.length,
                   itemBuilder: (context, index) {
                     final event = adminPanelController.allEvents[index];
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 4,
-                      child: ExpansionTile(
-                        leading: Icon(Icons.event, color: Colors.green[700]),
-                        title: Text(event.title),
-                        subtitle: Text(event.dateTime.toString()),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red[400]),
-                          onPressed: () {
-                            adminPanelController.deleteEvent(event.id);
-                          },
-                        ),
-                        children: [
-                          ListTile(
-                            title: Text('Created At: ${event.dateTime}'),
-                            // Add more info here
-                          ),
-                        ],
-                      ),
+                    return EventExpansionTile(
+                      event: event,
+                      onEdit: () => adminPanelController.editEvent(event),
+                      onDelete:
+                          () => adminPanelController.showDeleteDialog(event),
                     );
                   },
                 ),
@@ -117,15 +59,31 @@ class AdminTabBarView extends StatelessWidget {
             Positioned(
               bottom: 24,
               right: 24,
-              child: FloatingActionButton(
-                backgroundColor: Colors.green[700],
-                onPressed: () async {
-                  final result = await Get.toNamed(AppRoutes.createEventScreen);
-                  if (result == true) {
-                    await adminPanelController.loadAllEvents();
-                  }
-                },
-                child: Icon(Icons.add),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF667EEA).withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: adminPanelController.createNewEvent,
+                    child: const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Icon(Icons.add, color: Colors.white, size: 24),
+                    ),
+                  ),
+                ),
               ),
             ),
           ],

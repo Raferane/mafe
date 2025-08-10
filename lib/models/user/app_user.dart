@@ -32,7 +32,7 @@ class AppUser {
       uid: data?['uid'],
       email: data?['email'],
       displayName: data?['displayName'],
-      city: data?['city'],
+      city: data?['city'] ?? '',
       isAdmin: data?['isAdmin'] ?? false,
       createdAt: (data?['createdAt'] as Timestamp).toDate(),
       isBanned: data?['isBanned'] ?? false,

@@ -15,6 +15,7 @@ import 'package:unity_project/models/bindings/admin_bindings.dart';
 import 'package:unity_project/models/bindings/auth_bindings.dart';
 import 'package:unity_project/middleware/auth_middleware.dart';
 import 'package:unity_project/models/bindings/edit_profile_binding.dart';
+import 'package:unity_project/models/events/events_model.dart';
 import 'app_routes.dart';
 
 final List<GetPage> appPages = [
@@ -53,6 +54,9 @@ final List<GetPage> appPages = [
     binding: EditProfileBinding(),
   ),
   GetPage(name: AppRoutes.adminpanel, page: () => AdminPanelScreen()),
-  GetPage(name: AppRoutes.createEventScreen, page: () => CreateEventScreens()),
+  GetPage(
+    name: AppRoutes.createEventScreen,
+    page: () => CreateEventScreens(eventToEdit: Get.arguments as Event?),
+  ),
   GetPage(name: AppRoutes.settings, page: () => SettingsScreen()),
 ];
