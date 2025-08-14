@@ -8,7 +8,7 @@ import 'package:unity_project/Views/Bottom_screens/Favorites/favorites_screen.da
 import 'package:unity_project/Views/Bottom_screens/profile/profile_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/search/search_screen.dart';
 import 'package:unity_project/models/services/app_service.dart';
-import 'package:unity_project/controllers/auth_controllers.dart';
+
 import 'package:unity_project/routes/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -130,7 +130,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onTap: () {
-                Get.find<AppService>().signOut();
+                FirebaseAuth.instance.signOut();
+                GoogleSignIn().signOut();
+                Get.find<AppService>().clearUser();
+                Get.offAllNamed('/welcome');
               },
             ),
           ],

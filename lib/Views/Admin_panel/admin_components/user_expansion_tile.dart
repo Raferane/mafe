@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:unity_project/models/user/app_user.dart';
 
 class UserExpansionTile extends StatelessWidget {
@@ -25,7 +24,7 @@ class UserExpansionTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -264,8 +263,9 @@ class UserExpansionTile extends StatelessWidget {
   }
 
   List<Color> _getUserGradientColors() {
-    if (user.isBanned)
+    if (user.isBanned) {
       return [const Color(0xFFEF4444), const Color(0xFFDC2626)];
+    }
     if (user.isAdmin) return [const Color(0xFF10B981), const Color(0xFF059669)];
     return [const Color(0xFF34D399), const Color(0xFF10B981)];
   }
@@ -307,7 +307,7 @@ class UserExpansionTile extends StatelessWidget {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Material(
