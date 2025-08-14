@@ -7,6 +7,7 @@ class AppUser {
   final String city;
   final bool isAdmin;
   final DateTime createdAt;
+  final bool isBanned;
   final bool isGoogle;
   final String? newTempEmail;
 
@@ -17,6 +18,7 @@ class AppUser {
     this.displayName,
     required this.isAdmin,
     required this.createdAt,
+    required this.isBanned,
     required this.isGoogle,
     this.newTempEmail,
   });
@@ -30,9 +32,10 @@ class AppUser {
       uid: data?['uid'],
       email: data?['email'],
       displayName: data?['displayName'],
-      city: data?['city'],
+      city: data?['city'] ?? '',
       isAdmin: data?['isAdmin'] ?? false,
       createdAt: (data?['createdAt'] as Timestamp).toDate(),
+      isBanned: data?['isBanned'] ?? false,
       isGoogle: data?['isGoogle'] ?? false,
       newTempEmail: data?['newTempEmail'],
     );
@@ -46,6 +49,7 @@ class AppUser {
       'city': city,
       'isAdmin': isAdmin,
       'createdAt': createdAt,
+      'isBanned': isBanned,
       'isGoogle': isGoogle,
       if (newTempEmail != null) 'newTempEmail': newTempEmail,
     };

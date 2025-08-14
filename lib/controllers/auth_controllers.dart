@@ -117,6 +117,7 @@ class AuthController extends GetxController {
         city: city,
         isAdmin: false,
         createdAt: DateTime.now(),
+        isBanned: false,
         isGoogle: false,
       );
       await userService.createUser(newUser);
@@ -190,6 +191,7 @@ class AuthController extends GetxController {
         isAdmin: false,
         displayName: googleUser.displayName,
         createdAt: DateTime.now(),
+        isBanned: false,
         isGoogle: true,
       );
       await userService.createUser(newUser);
