@@ -9,7 +9,7 @@ import 'package:unity_project/Views/Root/root_screen.dart';
 import 'package:unity_project/Views/Welcome/welcome_screen.dart';
 import 'package:unity_project/Views/Login/login_screen.dart';
 import 'package:unity_project/Views/register/register_screen.dart';
-import 'package:unity_project/Views/home_screen.dart';
+import 'package:unity_project/Views/Home/home_screen.dart';
 import 'package:unity_project/Views/settings/settings_screen.dart';
 import 'package:unity_project/models/bindings/admin_bindings.dart';
 import 'package:unity_project/models/bindings/auth_bindings.dart';

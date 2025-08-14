@@ -81,14 +81,28 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             SizedBox(height: height * 0.03),
-            ListTile(
-              leading: Icon(Icons.admin_panel_settings),
-              title: Text('Admin Panel'),
-              onTap: () {
-                Get.toNamed(AppRoutes.adminpanel);
-              },
-            ),
-            SizedBox(height: height * 0.03),
+
+            //Admin Panel - Only for admin
+            Obx(() {
+              final appService = Get.find<AppService>();
+              final currentUser = appService.user.value;
+              if (currentUser?.isAdmin == true) {
+                return Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.admin_panel_settings),
+                      title: Text('Admin Panel'),
+                      onTap: () {
+                        Get.toNamed(AppRoutes.adminpanel);
+                      },
+                    ),
+                    SizedBox(height: height * 0.03),
+                  ],
+                );
+              } else {
+                return SizedBox.shrink();
+              }
+            }),
             ListTile(
               leading: Icon(Icons.info),
               title: Text('About Us'),
