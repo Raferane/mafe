@@ -99,10 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Icon(Icons.logout),
               title: Text('Logout'),
               onTap: () {
-                FirebaseAuth.instance.signOut();
-                GoogleSignIn().signOut();
-                Get.find<AppService>().clearUser();
-                Get.offAllNamed('/welcome');
+                Get.find<AppService>().signOut();
               },
             ),
           ],

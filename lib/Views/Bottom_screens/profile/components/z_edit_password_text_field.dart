@@ -8,6 +8,8 @@ class ZEditPasswordTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool obscureText;
   final EditProfileController editProfileController;
+  final bool isEnabled;
+  final VoidCallback? onDisabledTap;
   const ZEditPasswordTextField({
     super.key,
     required this.controller,
@@ -15,50 +17,64 @@ class ZEditPasswordTextField extends StatelessWidget {
     this.validator,
     required this.editProfileController,
     this.obscureText = true,
+    this.isEnabled = true,
+    this.onDisabledTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => TextFormField(
-        controller: controller,
-        validator: validator,
-        obscureText: editProfileController.isPasswordVisible.value,
-        keyboardType: TextInputType.visiblePassword,
-        onTapOutside: (event) {
-          FocusScope.of(context).unfocus();
-        },
-        decoration: InputDecoration(
-          suffixIcon: IconButton(
-            onPressed: () {
-              editProfileController.togglePasswordVisibility();
-            },
-            icon: Icon(
-              editProfileController.isPasswordVisible.value
-                  ? Icons.visibility_off
-                  : Icons.visibility,
+      () => GestureDetector(
+        onTap: isEnabled ? null : onDisabledTap,
+        behavior: HitTestBehavior.translucent,
+        child: TextFormField(
+          enabled: isEnabled,
+          controller: controller,
+          validator: isEnabled ? validator : (_) => null,
+          obscureText: editProfileController.isPasswordVisible.value,
+          keyboardType: TextInputType.visiblePassword,
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
+          decoration: InputDecoration(
+            suffixIcon: IconButton(
+              onPressed: () {
+                editProfileController.togglePasswordVisibility();
+              },
+              icon:
+                  isEnabled
+                      ? Icon(
+                        editProfileController.isPasswordVisible.value
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      )
+                      : Icon(
+                        Icons.lock_outline,
+                        color: Color(0xff545454),
+                        size: 20,
+                      ),
             ),
-          ),
-          labelText: labelText,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          floatingLabelStyle: TextStyle(
-            color: Color(0xff545454),
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Color(0xff545454).withAlpha(50)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Color(0xff545454).withAlpha(50)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: Color(0xff545454).withAlpha(50),
-              width: 2,
+            labelText: labelText,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            floatingLabelStyle: TextStyle(
+              color: Color(0xff545454),
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: Color(0xff545454).withAlpha(50)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: Color(0xff545454).withAlpha(50)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: Color(0xff545454).withAlpha(50),
+                width: 2,
+              ),
             ),
           ),
         ),

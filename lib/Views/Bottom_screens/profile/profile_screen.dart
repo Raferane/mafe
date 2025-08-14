@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:unity_project/Views/Bottom_screens/profile/edit_profile_screen.dart';
 import 'package:unity_project/models/services/app_service.dart';
 import 'package:unity_project/routes/app_routes.dart';
 
@@ -116,20 +115,69 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 24),
                     ListTile(
-                      leading: Icon(Icons.settings),
-                      title: Text('Settings'),
-                      onTap: () {},
-                    ),
-                    ListTile(
                       leading: Icon(Icons.logout),
                       title: Text('Logout'),
-                      onTap: () {},
+                      onTap: () {
+                        Get.find<AppService>().signOut();
+                      },
                     ),
                     SizedBox(height: 10),
                     ListTile(
                       leading: Icon(Icons.delete_outline),
                       title: Text('Delete Account'),
-                      onTap: () {},
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder:
+                              (context) => AlertDialog(
+                                backgroundColor: Color(0xffedf2f4),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                title: Text(
+                                  'Delete Account',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff545454),
+                                  ),
+                                ),
+                                content: Text(
+                                  'Are you sure you want to delete your account?',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xff545454),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Color(0xff545454),
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.find<AppService>().deleteAccount();
+                                    },
+                                    child: Text(
+                                      'Delete',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        );
+                      },
                     ),
                   ],
                 ),

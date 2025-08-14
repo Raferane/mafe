@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:unity_project/models/user/app_user.dart';
 
 class AppService extends GetxService {
@@ -56,5 +57,21 @@ class AppService extends GetxService {
       });
       await fetchUser(refreshedUser.uid);
     }
+  }
+
+  // sign out
+  Future<void> signOut() async {
+    _auth.signOut();
+    GoogleSignIn().signOut();
+    clearUser();
+    Get.offAllNamed('/welcome');
+  }
+
+  // delete account
+  Future<void> deleteAccount() async {
+    await _auth.currentUser?.delete();
+    await _db.collection('users').doc(_auth.currentUser!.uid).delete();
+    await clearUser();
+    Get.offAllNamed('/welcome');
   }
 }

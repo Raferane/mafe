@@ -89,9 +89,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: height * 0.02),
                 Obx(() {
                   final isGoogleUser = appService.user.value?.isGoogle;
-                  if (isGoogleUser == false) {
-                    return Column(
-                      children: [
+                  return Column(
+                    children: [
+                      if (isGoogleUser == false) ...[
                         ZEditTextField(
                           controller: emailController,
                           labelText: 'Email',
@@ -135,56 +135,104 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ],
                             ),
                           ),
+                      ] else ...[
+                        ZGoogleTextField(
+                          controller: emailController,
+                          labelText: 'Email',
+                          onDisabledTap: () {
+                            Get.snackbar(
+                              'Error',
+                              'Email changes are managed by your Google account',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red[100],
+                              colorText: Colors.red[900],
+                              duration: Duration(seconds: 2),
+                            );
+                          },
+                        ),
                       ],
-                    );
-                  } else {
-                    return ZGoogleTextField(
-                      controller: emailController,
-                      labelText: 'Email',
-                    );
-                  }
+                      SizedBox(height: height * 0.02),
+                      ZEditOldPasswordTextField(
+                        isEnabled: isGoogleUser == false,
+                        controller: oldPasswordController,
+                        labelText: 'Old Password',
+                        editProfileController: editProfileController,
+                        onDisabledTap: () {
+                          Get.snackbar(
+                            'Error',
+                            'Old Password is required for non-Google users',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red[100],
+                            colorText: Colors.red[900],
+                            duration: Duration(seconds: 2),
+                          );
+                        },
+                        validator: (value) {
+                          if (value != null && value.isNotEmpty) {
+                            if (value.length < 8) {
+                              return 'Old Password must be at least 8 characters long';
+                            }
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: height * 0.02),
+                      ZEditPasswordTextField(
+                        controller: newPasswordController,
+                        labelText: 'New Password',
+                        isEnabled: isGoogleUser == false,
+                        onDisabledTap: () {
+                          Get.snackbar(
+                            'Error',
+                            'New Password is required for non-Google users',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red[100],
+                            colorText: Colors.red[900],
+                            duration: Duration(seconds: 2),
+                          );
+                        },
+                        editProfileController: editProfileController,
+                        validator: (value) {
+                          if (oldPasswordController.text.isNotEmpty) {
+                            if (value == null || value.isEmpty) {
+                              return 'New Password is required';
+                            } else if (value.length < 8) {
+                              return 'New Password must be at least 8 characters long';
+                            }
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: height * 0.02),
+                      ZEditConfirmPasswordTextField(
+                        controller: confirmPasswordController,
+                        isEnabled: isGoogleUser == false,
+                        onDisabledTap: () {
+                          Get.snackbar(
+                            'Error',
+                            'Confirm New Password is required for non-Google users',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red[100],
+                            colorText: Colors.red[900],
+                            duration: Duration(seconds: 2),
+                          );
+                        },
+                        labelText: 'Confirm New Password',
+                        editProfileController: editProfileController,
+                        validator: (value) {
+                          if (oldPasswordController.text.isNotEmpty) {
+                            if (value == null || value.isEmpty) {
+                              return 'Confirm New Password is required';
+                            } else if (value != newPasswordController.text) {
+                              return 'Passwords do not match';
+                            }
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  );
                 }),
-                SizedBox(height: height * 0.02),
-                ZEditOldPasswordTextField(
-                  controller: oldPasswordController,
-                  labelText: 'Old Password',
-                  editProfileController: editProfileController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Old Password is required';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: height * 0.02),
-                ZEditPasswordTextField(
-                  controller: newPasswordController,
-                  labelText: 'New Password',
-                  editProfileController: editProfileController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'New Password is required';
-                    } else if (value.length < 8) {
-                      return 'New Password must be at least 8 characters long';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: height * 0.02),
-                ZEditConfirmPasswordTextField(
-                  controller: confirmPasswordController,
-                  labelText: 'Confirm New Password',
-                  editProfileController: editProfileController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Confirm New Password is required';
-                    }
-                    if (value != newPasswordController.text) {
-                      return 'Passwords do not match';
-                    }
-                    return null;
-                  },
-                ),
                 SizedBox(height: height * 0.02),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -195,6 +243,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
                 SizedBox(height: height * 0.02),
+                // S A V E  B U T T O N
                 Obx(() {
                   final isLoading = appService.isLoading;
 
@@ -251,6 +300,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     );
                                     passwordUpdated = true;
                                   }
+                                  Get.log(
+                                    "profileUpdated: $profileUpdated, emailUpdated: $emailUpdated, passwordUpdated: $passwordUpdated",
+                                  );
                                   if (profileUpdated &&
                                       emailUpdated &&
                                       passwordUpdated) {
@@ -302,7 +354,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   Get.log("Unexpected Error: $e");
                                 } finally {
                                   isLoading.value = false;
-                                  Get.back();
                                   oldPasswordController.clear();
                                   newPasswordController.clear();
                                   confirmPasswordController.clear();
