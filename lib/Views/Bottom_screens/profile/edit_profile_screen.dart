@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/components/z_edit_confirm_password_text_field.dart';
-import 'package:unity_project/Views/Bottom_screens/profile/components/z_edit_old_password_text_field.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/components/z_edit_password_text_field.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/components/z_edit_text_field.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/components/z_google_text_form_field.dart';
@@ -46,6 +45,163 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
+  void _openUnlockSheet({required bool isGoogleUser}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        final viewInsets = MediaQuery.of(ctx).viewInsets;
+        final TextEditingController tempCurrentPasswordController =
+            TextEditingController();
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 24,
+            bottom: 24 + viewInsets.bottom,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 50,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Color(0xff545454).withAlpha(100),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Unlock security changes',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                isGoogleUser
+                    ? 'For Google accounts, security settings are managed by Google.'
+                    : 'Enter your current password to enable editing Email and Password.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey.shade700),
+              ),
+              const SizedBox(height: 16),
+              if (!isGoogleUser)
+                TextField(
+                  controller: tempCurrentPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                      color: Color(0xff545454),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    labelText: 'Current password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: Color(0xff545454).withAlpha(100),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: Color(0xff545454).withAlpha(100),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: Color(0xff545454).withAlpha(100),
+                      ),
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Color(0xff545454),
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff545454),
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () async {
+                        try {
+                          await editProfileController.verifyCurrentPassword(
+                            tempCurrentPasswordController.text,
+                          );
+                          if (!isGoogleUser) {
+                            oldPasswordController.text =
+                                tempCurrentPasswordController.text;
+                            editProfileController.recentPassword.value =
+                                tempCurrentPasswordController.text;
+                            Get.log(
+                              'recentPassword: ${editProfileController.recentPassword.value}',
+                            );
+                            Future.delayed(Duration(minutes: 5), () {
+                              if (editProfileController
+                                  .recentPassword
+                                  .value
+                                  .isNotEmpty) {
+                                editProfileController.recentPassword.value = '';
+                              }
+                            });
+                            if (editProfileController
+                                .recentPassword
+                                .value
+                                .isEmpty) {
+                              editProfileController.securityUnlocked.value =
+                                  false;
+                            } else {
+                              editProfileController.securityUnlocked.value =
+                                  true;
+                            }
+                          }
+                          if (context.mounted) {
+                            Navigator.pop(ctx);
+                          }
+                        } catch (e) {
+                          Get.snackbar(
+                            'Error',
+                            e.toString(),
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red[100],
+                            colorText: Colors.red[900],
+                            duration: Duration(seconds: 2),
+                          );
+                        }
+                      },
+                      child: const Text('Confirm'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -87,52 +243,173 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   },
                 ),
                 SizedBox(height: height * 0.02),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: ZDropDownMenu(
+                    width: width,
+                    registerCityController: cityController,
+                    height: height,
+                  ),
+                ),
+
+                SizedBox(height: height * 0.02),
                 Obx(() {
-                  final isGoogleUser = appService.user.value?.isGoogle;
+                  final bool isGoogleUser =
+                      appService.user.value?.isGoogle ?? false;
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (isGoogleUser == false) ...[
-                        ZEditTextField(
-                          controller: emailController,
-                          labelText: 'Email',
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Email is required';
-                            }
-                            if (!GetUtils.isEmail(value)) {
-                              return 'Invalid email address';
-                            }
-                            return null;
-                          },
-                        ),
-                        // Show verification status if there's a pending email
-                        if (appService.user.value?.newTempEmail != null)
-                          Container(
-                            margin: EdgeInsets.only(top: 8),
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Color(0xffedf2f4),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Color(0xff545454)),
+                      // Security header + unlock button
+                      Row(
+                        children: [
+                          Text(
+                            'Security',
+                            style: TextStyle(
+                              color: Color(0xff545454),
+                              fontSize: width * 0.045,
+                              fontWeight: FontWeight.w700,
                             ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.info_outline,
-                                  color: Colors.red.shade400,
-                                  size: 20,
-                                ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    'Please check your email (${appService.user.value?.newTempEmail}) and click the verification link to complete the email change.',
-                                    style: TextStyle(
-                                      color: Colors.red.shade400,
-                                      fontSize: 12,
+                          ),
+                          Spacer(),
+                          TextButton.icon(
+                            style: TextButton.styleFrom(
+                              side: BorderSide(
+                                color: Color(0xff545454),
+                                width: 1,
+                              ),
+                            ),
+                            onPressed:
+                                isGoogleUser
+                                    ? null
+                                    : () => _openUnlockSheet(
+                                      isGoogleUser: isGoogleUser,
                                     ),
+                            icon: Icon(
+                              editProfileController.securityUnlocked.value
+                                  ? Icons.lock_open
+                                  : Icons.lock_outline,
+                              color:
+                                  isGoogleUser
+                                      ? Colors.grey
+                                      : (editProfileController
+                                              .securityUnlocked
+                                              .value
+                                          ? Colors.green
+                                          : Color(0xff545454)),
+                              size: height * 0.02,
+                            ),
+                            label: Text(
+                              editProfileController.securityUnlocked.value
+                                  ? 'Unlocked'
+                                  : 'Unlock changes',
+                              style: TextStyle(
+                                color:
+                                    isGoogleUser
+                                        ? Colors.grey
+                                        : (editProfileController
+                                                .securityUnlocked
+                                                .value
+                                            ? Colors.green
+                                            : Color(0xff545454)),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: height * 0.02),
+                      // Pending email verification banner
+                      if (appService.user.value?.newTempEmail != null)
+                        Container(
+                          margin: EdgeInsets.only(bottom: height * 0.01),
+                          padding: EdgeInsets.all(height * 0.01),
+                          decoration: BoxDecoration(
+                            color: Color(0xffedf2f4),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Color(0xff545454)),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                color: Colors.red.shade400,
+                                size: height * 0.02,
+                              ),
+                              SizedBox(width: height * 0.01),
+                              Expanded(
+                                child: Text(
+                                  'Please check your email (${appService.user.value?.newTempEmail}) and click the verification link to complete the email change.',
+                                  style: TextStyle(
+                                    color: Colors.red.shade400,
+                                    fontSize: height * 0.015,
                                   ),
                                 ),
-                              ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      // Google accounts hint
+                      if (isGoogleUser)
+                        Container(
+                          margin: EdgeInsets.only(bottom: height * 0.01),
+                          padding: EdgeInsets.all(height * 0.01),
+                          decoration: BoxDecoration(
+                            color: Color(0xffedf2f4),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Color(0xff545454)),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.lock,
+                                color: Colors.red,
+                                size: height * 0.02,
+                              ),
+                              SizedBox(width: height * 0.01),
+                              Expanded(
+                                child: Text(
+                                  'Email and password changes are managed by your Google account.',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: height * 0.015,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      SizedBox(height: height * 0.02),
+                      // Email field (gated by unlock)
+                      if (!isGoogleUser) ...[
+                        AbsorbPointer(
+                          absorbing:
+                              !editProfileController.securityUnlocked.value,
+                          child: ZEditTextField(
+                            controller: emailController,
+                            labelText: 'Email',
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Email is required';
+                              }
+                              if (!GetUtils.isEmail(value)) {
+                                return 'Invalid email address';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        if (!editProfileController.securityUnlocked.value)
+                          Padding(
+                            padding: EdgeInsets.only(top: height * 0.01),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Unlock to edit',
+                                style: TextStyle(
+                                  color: Color(0xff545454).withAlpha(150),
+                                  fontSize: height * 0.015,
+                                ),
+                              ),
                             ),
                           ),
                       ] else ...[
@@ -152,96 +429,102 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ],
                       SizedBox(height: height * 0.02),
-                      ZEditOldPasswordTextField(
-                        isEnabled: isGoogleUser == false,
-                        controller: oldPasswordController,
-                        labelText: 'Old Password',
-                        editProfileController: editProfileController,
-                        onDisabledTap: () {
-                          Get.snackbar(
-                            'Error',
-                            'Old Password is required for non-Google users',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.red[100],
-                            colorText: Colors.red[900],
-                            duration: Duration(seconds: 2),
-                          );
-                        },
-                        validator: (value) {
-                          if (value != null && value.isNotEmpty) {
-                            if (value.length < 8) {
-                              return 'Old Password must be at least 8 characters long';
-                            }
-                          }
-                          return null;
-                        },
+                      // Change password toggle
+                      Opacity(
+                        opacity: isGoogleUser ? 0.5 : 1,
+                        child: SwitchListTile.adaptive(
+                          activeColor: Colors.green.shade400,
+                          activeTrackColor: Colors.green.shade100,
+                          inactiveTrackColor: Colors.grey.shade400,
+                          inactiveThumbColor: Colors.white,
+                          trackOutlineColor: WidgetStateProperty.all(
+                            Colors.grey.shade400,
+                          ),
+                          title: Text('Change password'),
+                          value:
+                              editProfileController.wantsToChangePassword.value,
+                          onChanged:
+                              (!isGoogleUser &&
+                                      editProfileController
+                                          .securityUnlocked
+                                          .value)
+                                  ? (val) =>
+                                      editProfileController
+                                          .wantsToChangePassword
+                                          .value = val
+                                  : null,
+                          contentPadding: EdgeInsets.zero,
+                        ),
                       ),
-                      SizedBox(height: height * 0.02),
-                      ZEditPasswordTextField(
-                        controller: newPasswordController,
-                        labelText: 'New Password',
-                        isEnabled: isGoogleUser == false,
-                        onDisabledTap: () {
-                          Get.snackbar(
-                            'Error',
-                            'New Password is required for non-Google users',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.red[100],
-                            colorText: Colors.red[900],
-                            duration: Duration(seconds: 2),
-                          );
-                        },
-                        editProfileController: editProfileController,
-                        validator: (value) {
-                          if (oldPasswordController.text.isNotEmpty) {
-                            if (value == null || value.isEmpty) {
-                              return 'New Password is required';
-                            } else if (value.length < 8) {
-                              return 'New Password must be at least 8 characters long';
+                      SizedBox(height: height * 0.01),
+                      if (editProfileController
+                          .wantsToChangePassword
+                          .value) ...[
+                        ZEditPasswordTextField(
+                          controller: newPasswordController,
+                          labelText: 'New Password',
+                          isEnabled:
+                              editProfileController.securityUnlocked.value &&
+                              !isGoogleUser,
+                          onDisabledTap: () {
+                            Get.snackbar(
+                              'Error',
+                              'Unlock to change password',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red[100],
+                              colorText: Colors.red[900],
+                              duration: Duration(seconds: 2),
+                            );
+                          },
+                          editProfileController: editProfileController,
+                          validator: (value) {
+                            if (editProfileController
+                                .wantsToChangePassword
+                                .value) {
+                              if (value != null && value.isNotEmpty) {
+                                if (value.length < 8) {
+                                  return 'New Password must be at least 8 characters long';
+                                }
+                              }
                             }
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: height * 0.02),
-                      ZEditConfirmPasswordTextField(
-                        controller: confirmPasswordController,
-                        isEnabled: isGoogleUser == false,
-                        onDisabledTap: () {
-                          Get.snackbar(
-                            'Error',
-                            'Confirm New Password is required for non-Google users',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.red[100],
-                            colorText: Colors.red[900],
-                            duration: Duration(seconds: 2),
-                          );
-                        },
-                        labelText: 'Confirm New Password',
-                        editProfileController: editProfileController,
-                        validator: (value) {
-                          if (oldPasswordController.text.isNotEmpty) {
-                            if (value == null || value.isEmpty) {
-                              return 'Confirm New Password is required';
-                            } else if (value != newPasswordController.text) {
-                              return 'Passwords do not match';
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: height * 0.02),
+                        ZEditConfirmPasswordTextField(
+                          controller: confirmPasswordController,
+                          isEnabled:
+                              editProfileController.securityUnlocked.value &&
+                              !isGoogleUser,
+                          onDisabledTap: () {
+                            Get.snackbar(
+                              'Error',
+                              'Unlock to change password',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red[100],
+                              colorText: Colors.red[900],
+                              duration: Duration(seconds: 2),
+                            );
+                          },
+                          labelText: 'Confirm New Password',
+                          editProfileController: editProfileController,
+                          validator: (value) {
+                            if (editProfileController
+                                .wantsToChangePassword
+                                .value) {
+                              if (value != null && value.isNotEmpty) {
+                                if (value != newPasswordController.text) {
+                                  return 'Passwords do not match';
+                                }
+                              }
                             }
-                          }
-                          return null;
-                        },
-                      ),
+                            return null;
+                          },
+                        ),
+                      ],
                     ],
                   );
                 }),
-                SizedBox(height: height * 0.02),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: ZDropDownMenu(
-                    width: width,
-                    registerCityController: cityController,
-                    height: height,
-                  ),
-                ),
                 SizedBox(height: height * 0.02),
                 // S A V E  B U T T O N
                 Obx(() {
@@ -275,7 +558,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   if (!isGoogleUser &&
                                       currentEmail != emailController.text) {
                                     await editProfileController.editEmail(
-                                      emailController.text,
+                                      newEmail: emailController.text,
+                                      currentPassword:
+                                          oldPasswordController.text,
+                                      oldEmail: currentEmail,
                                     );
                                     emailUpdated = true;
                                   }
@@ -300,9 +586,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     );
                                     passwordUpdated = true;
                                   }
-                                  Get.log(
-                                    "profileUpdated: $profileUpdated, emailUpdated: $emailUpdated, passwordUpdated: $passwordUpdated",
-                                  );
                                   if (profileUpdated &&
                                       emailUpdated &&
                                       passwordUpdated) {
@@ -345,7 +628,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 } catch (e) {
                                   Get.snackbar(
                                     'Error',
-                                    "Unexpected Error",
+                                    "Unexpected Error: $e",
                                     snackPosition: SnackPosition.BOTTOM,
                                     backgroundColor: Colors.red[100],
                                     colorText: Colors.red[900],

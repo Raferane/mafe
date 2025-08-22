@@ -17,7 +17,7 @@ class ZEditTextField extends StatelessWidget {
       controller: controller,
       validator: validator,
       onTapOutside: (event) {
-        FocusScope.of(context).unfocus();
+        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       },
       decoration: InputDecoration(
         labelText: labelText,

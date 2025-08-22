@@ -26,10 +26,11 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Get.find<AppService>().user;
+    final appService = Get.find<AppService>();
+    final user = appService.user;
     return RefreshIndicator(
       onRefresh: () async {
-        await Get.find<AppService>().restoreUser();
+        await appService.restoreUser();
       },
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -181,8 +182,9 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                   ),
                                   TextButton(
-                                    onPressed: () {
-                                      Get.find<AppService>().deleteAccount();
+                                    onPressed: () async {
+                                      await Get.find<AppService>()
+                                          .deleteAccount();
                                     },
                                     child: Text(
                                       'Delete',

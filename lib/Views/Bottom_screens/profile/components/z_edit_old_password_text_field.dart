@@ -34,7 +34,7 @@ class ZEditOldPasswordTextField extends StatelessWidget {
           obscureText: editProfileController.isOldPasswordVisible.value,
           keyboardType: TextInputType.visiblePassword,
           onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
+            WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
           },
           decoration: InputDecoration(
             suffixIcon: IconButton(

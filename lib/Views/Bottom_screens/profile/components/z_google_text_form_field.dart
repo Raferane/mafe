@@ -51,6 +51,9 @@ class ZGoogleTextField extends StatelessWidget {
             ),
           ),
         ),
+        onTapOutside: (event) {
+          WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+        },
       ),
     );
   }
