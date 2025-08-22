@@ -204,12 +204,9 @@ class EventExpansionTile extends StatelessWidget {
                       const SizedBox(width: 16),
                       Expanded(
                         child: _buildDetailItem(
-                          icon: Icons.person,
-                          title: 'Created By',
-                          value:
-                              event.createdBy.isEmpty
-                                  ? 'Admin'
-                                  : event.createdBy,
+                          icon: Icons.business,
+                          title: 'Organization',
+                          value: event.organization,
                         ),
                       ),
                     ],
@@ -294,10 +291,12 @@ class EventExpansionTile extends StatelessWidget {
   }
 
   List<Color> _getEventGradientColors() {
-    if (_isEventUpcoming())
+    if (_isEventUpcoming()) {
       return [const Color(0xFF10B981), const Color(0xFF059669)];
-    if (_isEventToday())
+    }
+    if (_isEventToday()) {
       return [const Color(0xFFF59E0B), const Color(0xFFD97706)];
+    }
     return [const Color(0xFFEF4444), const Color(0xFFDC2626)];
   }
 

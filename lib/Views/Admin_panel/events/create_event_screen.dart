@@ -28,17 +28,24 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
     final grayCard = Colors.grey[100];
     final grayBorder = Colors.grey[300];
     final grayText = Colors.grey[800];
+    final size = MediaQuery.of(context).size;
+    final height = size.height;
+    final width = size.width;
 
     return Scaffold(
       backgroundColor: grayBg,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: EdgeInsets.symmetric(
+            horizontal: width * 0.05,
+            vertical: height * 0.02,
+          ),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: height * 0.02),
                 Text(
                   widget.eventToEdit != null ? 'Edit Event' : 'Create Event',
                   style: TextStyle(
@@ -48,7 +55,7 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: height * 0.06),
                 // Title
                 TextFormField(
                   controller: adminPanelController.titleController,
@@ -60,19 +67,37 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: grayBorder!),
                     ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    floatingLabelStyle: TextStyle(
+                      color: grayText,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(width: 1.5),
+                    ),
                   ),
+                  onTapOutside:
+                      (event) =>
+                          WidgetsBinding.instance.focusManager.primaryFocus
+                              ?.unfocus(),
                   validator:
                       (v) =>
                           v == null || v.trim().isEmpty
                               ? 'Title required'
                               : null,
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: height * 0.02),
                 // Description
                 TextFormField(
                   controller: adminPanelController.descController,
                   minLines: 3,
                   maxLines: 5,
+                  onTapOutside:
+                      (event) =>
+                          WidgetsBinding.instance.focusManager.primaryFocus
+                              ?.unfocus(),
                   decoration: InputDecoration(
                     labelText: 'Description',
                     filled: true,
@@ -81,6 +106,16 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: grayBorder),
                     ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    floatingLabelStyle: TextStyle(
+                      color: grayText,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(width: 1.5),
+                    ),
                   ),
                   validator:
                       (v) =>
@@ -88,7 +123,39 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
                               ? 'Description required'
                               : null,
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: height * 0.02),
+                TextFormField(
+                  controller: adminPanelController.organizationController,
+                  decoration: InputDecoration(
+                    labelText: 'Organization',
+                    filled: true,
+                    fillColor: grayCard,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    floatingLabelStyle: TextStyle(
+                      color: grayText,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: grayBorder),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(width: 1.5),
+                    ),
+                  ),
+                  onTapOutside:
+                      (event) =>
+                          WidgetsBinding.instance.focusManager.primaryFocus
+                              ?.unfocus(),
+                  validator:
+                      (v) =>
+                          v == null || v.trim().isEmpty
+                              ? 'Organization required'
+                              : null,
+                ),
+                SizedBox(height: height * 0.02),
                 // Location
                 TextFormField(
                   controller: adminPanelController.locationController,
@@ -100,14 +167,28 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(color: grayBorder),
                     ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    floatingLabelStyle: TextStyle(
+                      color: grayText,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(width: 1.5),
+                    ),
                   ),
+                  onTapOutside:
+                      (event) =>
+                          WidgetsBinding.instance.focusManager.primaryFocus
+                              ?.unfocus(),
                   validator:
                       (v) =>
                           v == null || v.trim().isEmpty
                               ? 'Location required'
                               : null,
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: height * 0.02),
                 // Date & Time Picker
                 Obx(
                   () => GestureDetector(
@@ -121,6 +202,16 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(color: grayBorder),
+                          ),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          floatingLabelStyle: TextStyle(
+                            color: grayText,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(width: 1.5),
                           ),
                           suffixIcon: Icon(
                             Icons.calendar_today,
@@ -136,6 +227,13 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
                                       .split('.')[0]
                                       .replaceFirst(' ', '  '),
                         ),
+                        onTapOutside:
+                            (event) =>
+                                WidgetsBinding
+                                    .instance
+                                    .focusManager
+                                    .primaryFocus
+                                    ?.unfocus(),
                         validator:
                             (v) =>
                                 adminPanelController.selectedDateTime.value ==
@@ -146,7 +244,7 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: height * 0.06),
                 // Buttons
                 Row(
                   children: [
@@ -154,11 +252,13 @@ class _CreateEventScreensState extends State<CreateEventScreens> {
                       child: OutlinedButton(
                         onPressed: () => Get.back(),
                         style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: grayBorder),
+                          side: BorderSide(color: Color(0xff545454)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.symmetric(
+                            vertical: height * 0.02,
+                          ),
                         ),
                         child: Text(
                           'Cancel',

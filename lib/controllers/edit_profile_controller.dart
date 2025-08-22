@@ -12,12 +12,20 @@ class EditProfileController extends GetxController {
   final _isPasswordVisible = true.obs;
   final _isConfirmPasswordVisible = true.obs;
   final _isOldPasswordVisible = true.obs;
+  final _isOldPasswordEntered = false.obs;
+  final _securityUnlocked = false.obs;
+  final _wantsToChangePassword = false.obs;
+  final _recentPassword = ''.obs;
 
   RxBool get isLoading => _isLoading;
   Rxn<User> get user => _user;
   RxBool get isPasswordVisible => _isPasswordVisible;
   RxBool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
   RxBool get isOldPasswordVisible => _isOldPasswordVisible;
+  RxBool get isOldPasswordEntered => _isOldPasswordEntered;
+  RxBool get securityUnlocked => _securityUnlocked;
+  RxBool get wantsToChangePassword => _wantsToChangePassword;
+  RxString get recentPassword => _recentPassword;
 
   // update user
   Future<void> editUser(String uid, Map<String, dynamic> data) async {
@@ -40,23 +48,45 @@ class EditProfileController extends GetxController {
   }
 
   // Edit Email
-  Future<void> editEmail(String newEmail) async {
+  Future<void> editEmail({
+    required String newEmail,
+    required String currentPassword,
+    required String oldEmail,
+  }) async {
     try {
-      // Checking if the email is already in use
+      // Check if Email is in auth
+
       //updating email in firebase auth
       await _auth.currentUser?.verifyBeforeUpdateEmail(newEmail);
+      Get.log(_auth.currentUser!.emailVerified.toString());
       // Adding new temp email to the database
       await _db.collection('users').doc(_auth.currentUser!.uid).update({
         'newTempEmail': newEmail,
       });
+      Get.log("new temp email added to the database");
+      //re-authenticating the user
+      await _auth.currentUser
+          ?.reauthenticateWithCredential(
+            EmailAuthProvider.credential(
+              email: oldEmail,
+              password: currentPassword,
+            ),
+          )
+          .then((value) {
+            Get.log("re-authenticated");
+          });
+      Get.log("email updated in the database");
       //re-fetching the user
       await _appService.fetchUser(_auth.currentUser!.uid);
       Get.log("Email updated successfully");
     } on FirebaseAuthException catch (e) {
       String message;
       switch (e.code) {
-        case 'invalid-email':
-          message = 'The email address is not valid.';
+        case 'invalid-credential':
+          message = 'Invalid credentials.';
+          break;
+        case 'user-not-found':
+          message = 'This email is not associated with any account.';
           break;
         case 'email-already-in-use':
           message = 'An account already exists for that email.';
@@ -64,27 +94,17 @@ class EditProfileController extends GetxController {
         case 'requires-recent-login':
           message = 'Please login again to change email.';
           break;
+        case 'channel-error':
+          message = 'An error occurred during email update.';
+          break;
         default:
           message = 'An error occurred during email update.';
           Get.log("Unexpected Error: $e");
       }
       throw message;
     } catch (e) {
-      throw "An unexpected error occurred";
+      throw "An unexpected error occurred $e";
     }
-  }
-
-  // Reauthenticate User with Password
-  Future<void> reauthenticateWithPassword(
-    String currentEmail,
-    String password,
-  ) async {
-    final user = FirebaseAuth.instance.currentUser!;
-    final cred = EmailAuthProvider.credential(
-      email: currentEmail,
-      password: password,
-    );
-    await user.reauthenticateWithCredential(cred);
   }
 
   // Change Password
@@ -120,26 +140,35 @@ class EditProfileController extends GetxController {
     }
   }
 
-  // Safe Edit Email
-  Future<void> safeEditEmail(
-    String newEmail, {
-    required bool isGoogleUser,
-    required String currentEmail,
-    String? passwordForReauth,
-  }) async {
+  //Verify current password
+  Future<void> verifyCurrentPassword(String currentPassword) async {
     try {
-      await editEmail(newEmail); // sends verification + writes newTempEmail
-    } on String catch (msg) {
-      if (msg.contains('Please login again')) {
-        if (isGoogleUser) {
-          await reauthenticateWithPassword(currentEmail, passwordForReauth!);
-        } else {
-          // prompt for password in UI, then:
-        }
-        await editEmail(newEmail); // retry
-      } else {
-        rethrow;
+      await _auth.currentUser
+          ?.reauthenticateWithCredential(
+            EmailAuthProvider.credential(
+              email: _auth.currentUser!.email!,
+              password: currentPassword,
+            ),
+          )
+          .then((value) {
+            Get.log("Password is Correct");
+          });
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'invalid-credential':
+          message = 'Invalid credentials.';
+          break;
+        case 'user-not-found':
+          message = 'This email is not associated with any account.';
+          break;
+        default:
+          message = 'An error occurred during password verification.';
+          Get.log("Unexpected Error: $e");
       }
+      throw message;
+    } catch (e) {
+      throw "An unexpected error occurred $e";
     }
   }
 }

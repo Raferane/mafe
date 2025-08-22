@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:unity_project/Views/Admin_panel/admin_panel_screen.dart';
-import 'package:unity_project/Views/Admin_panel/events/creat_ event_screen.dart';
+import 'package:unity_project/Views/Admin_panel/events/create_event_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/Favorites/favorites_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/edit_profile_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/profile_screen.dart';

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -22,11 +23,17 @@ class AppService extends GetxService {
 
   // Restore The User Account
   Future<void> restoreUser() async {
-    final currentUser = _auth.currentUser;
-    if (currentUser != null) {
-      await fetchUser(currentUser.uid);
-      await checkEmailVerificationAndSync();
-    } else {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        // First fetch the user data
+        await fetchUser(currentUser.uid);
+        // Then check for email verification and sync
+      } else {
+        user.value = null;
+      }
+    } catch (e) {
+      // If there's an error, clear the user to prevent stale data
       user.value = null;
     }
   }
@@ -39,24 +46,6 @@ class AppService extends GetxService {
 
   Future<void> clearUser() async {
     user.value = null;
-  }
-
-  Future<void> checkEmailVerificationAndSync() async {
-    final currentUser = _auth.currentUser;
-    if (currentUser == null) return;
-
-    await currentUser.reload(); // important to refresh email after verification
-    final refreshedUser = _auth.currentUser;
-    final doc = await _db.collection('users').doc(refreshedUser!.uid).get();
-    final pending = doc.data()?['newTempEmail'] as String?;
-
-    if (pending != null && pending == refreshedUser.email) {
-      await _db.collection('users').doc(refreshedUser.uid).update({
-        'email': pending,
-        'newTempEmail': FieldValue.delete(),
-      });
-      await fetchUser(refreshedUser.uid);
-    }
   }
 
   // sign out

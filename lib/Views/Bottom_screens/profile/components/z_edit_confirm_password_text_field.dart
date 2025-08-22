@@ -34,7 +34,7 @@ class ZEditConfirmPasswordTextField extends StatelessWidget {
           obscureText: editProfileController.isConfirmPasswordVisible.value,
           keyboardType: TextInputType.visiblePassword,
           onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
+            WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
           },
           decoration: InputDecoration(
             suffixIcon: IconButton(

@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:unity_project/Views/Bottom_screens/Favorites/favorites_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/profile_screen.dart';
@@ -130,10 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onTap: () {
-                FirebaseAuth.instance.signOut();
-                GoogleSignIn().signOut();
-                Get.find<AppService>().clearUser();
-                Get.offAllNamed('/welcome');
+                Get.find<AppService>().signOut();
               },
             ),
           ],
@@ -219,8 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     onChanged: (value) {
-                      // Handle search functionality
-                      print('Searching for: $value');
+                      //TODO: Handle search functionality
                     },
                   ),
                 ),
@@ -316,20 +310,12 @@ class _HomeScreenState extends State<HomeScreen> {
           // Handle navigation based on index
           switch (index) {
             case 0: // Home
-              print('Home tab tapped');
-
               break;
             case 1: // Search
-              print('Search tab tapped');
-
               break;
             case 2: // Favorites
-              print('Favorites tab tapped');
-
               break;
             case 3: // Profile
-              print('Profile tab tapped');
-
               break;
           }
         },
