@@ -35,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent),
+      // Loading overlay
       body: LoadingOverlay(
         isLoading: controller.isLoading,
         child: SingleChildScrollView(
@@ -43,11 +44,13 @@ class _LoginScreenState extends State<LoginScreen> {
               horizontal: width * 0.05,
               vertical: height * 0.02,
             ),
+            // Login Form
             child: Form(
               key: loginFormKey,
               child: Column(
                 children: [
                   SizedBox(height: height * 0.05),
+                  // Welcome Back Text
                   Text(
                     'Welcome Back',
                     style: TextStyle(
@@ -56,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Color(0xff545454),
                     ),
                   ),
+                  // Login Text
                   Text(
                     'Login to your account',
                     style: TextStyle(
@@ -65,16 +69,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   SizedBox(height: height * 0.1),
+                  // Email Text Form Field
                   ZEmailTextFormField(
                     loginEmailController: loginEmailController,
                     controller: controller,
                   ),
                   SizedBox(height: height * 0.04),
+                  // Password Text Form Field
                   ZPasswordTextFormField(
                     loginPasswordController: loginPasswordController,
                     controller: controller,
                   ),
                   SizedBox(height: height * 0.01),
+                  // Remember Me Checkbox, not working for now. Just used for UI
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -102,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   SizedBox(height: height * 0.05),
+                  // Sign In Button
                   ZSignInButton(
                     text: 'Sign In',
                     bColor: Color(0xff545454),

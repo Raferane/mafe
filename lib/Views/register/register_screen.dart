@@ -43,6 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final height = size.height;
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent),
+      // Loading overlay
       body: LoadingOverlay(
         isLoading: controller.isLoading,
         child: SingleChildScrollView(
@@ -51,11 +52,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               horizontal: width * 0.05,
               vertical: height * 0.02,
             ),
+            // Register Form
             child: Form(
               key: registerFormKey,
               child: Column(
                 children: [
                   SizedBox(height: height * 0.05),
+                  // Welcome Text
                   Text(
                     'Welcome to Unity Volunteer',
                     style: TextStyle(
@@ -64,6 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       color: Color(0xff545454),
                     ),
                   ),
+                  // Register Text
                   Text(
                     'Register a new account',
                     style: TextStyle(
@@ -73,21 +77,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   SizedBox(height: height * 0.1),
+                  // Email Text Form Field
                   ZEmailTextFormField(
                     loginEmailController: registerEmailController,
                     controller: controller,
                   ),
                   SizedBox(height: height * 0.04),
+                  // Display Name Text Form Field
                   DisplayNameTextField(
                     displayNameController: registerDisplayNameController,
                     controller: controller,
                   ),
                   SizedBox(height: height * 0.04),
+                  // Password Text Form Field
                   ZPasswordTextFormField(
                     loginPasswordController: registerPasswordController,
                     controller: controller,
                   ),
                   SizedBox(height: height * 0.04),
+                  // Confirm Password Text Form Field
                   ZConfirmPasswordField(
                     confirmPasswordController:
                         registerConfirmPasswordController,
@@ -95,6 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     registerPasswordController: registerPasswordController,
                   ),
                   SizedBox(height: height * 0.04),
+                  // City Drop Down Menu
                   Align(
                     alignment: Alignment.centerLeft,
                     child: ZDropDownMenu(
@@ -104,6 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   SizedBox(height: height * 0.01),
+                  // Remember Me Checkbox, not working for now. Just used for UI
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -131,8 +141,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                   ),
                   SizedBox(height: height * 0.05),
+                  // Sign Up Button
                   ZSignUpButton(
-                    text: 'Sign In',
+                    text: 'Sign Up',
                     bColor: Color(0xff545454),
                     fColor: Color(0xffedf2f4),
                     fontWeight: FontWeight.w500,
