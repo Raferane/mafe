@@ -19,7 +19,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
-  final TextEditingController oldPasswordController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
@@ -39,7 +38,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     nameController.dispose();
     emailController.dispose();
     cityController.dispose();
-    oldPasswordController.dispose();
     newPasswordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
@@ -149,33 +147,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           await editProfileController.verifyCurrentPassword(
                             tempCurrentPasswordController.text,
                           );
-                          if (!isGoogleUser) {
-                            oldPasswordController.text =
-                                tempCurrentPasswordController.text;
-                            editProfileController.recentPassword.value =
-                                tempCurrentPasswordController.text;
-                            Get.log(
-                              'recentPassword: ${editProfileController.recentPassword.value}',
-                            );
-                            Future.delayed(Duration(minutes: 5), () {
-                              if (editProfileController
-                                  .recentPassword
-                                  .value
-                                  .isNotEmpty) {
-                                editProfileController.recentPassword.value = '';
-                              }
-                            });
-                            if (editProfileController
-                                .recentPassword
-                                .value
-                                .isEmpty) {
-                              editProfileController.securityUnlocked.value =
-                                  false;
-                            } else {
-                              editProfileController.securityUnlocked.value =
-                                  true;
-                            }
-                          }
                           if (context.mounted) {
                             Navigator.pop(ctx);
                           }
@@ -256,6 +227,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Obx(() {
                   final bool isGoogleUser =
                       appService.user.value?.isGoogle ?? false;
+                  final bool isSecurityValid =
+                      editProfileController.isPasswordValid;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -285,30 +258,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       isGoogleUser: isGoogleUser,
                                     ),
                             icon: Icon(
-                              editProfileController.securityUnlocked.value
+                              isSecurityValid
                                   ? Icons.lock_open
                                   : Icons.lock_outline,
                               color:
                                   isGoogleUser
                                       ? Colors.grey
-                                      : (editProfileController
-                                              .securityUnlocked
-                                              .value
+                                      : (isSecurityValid
                                           ? Colors.green
                                           : Color(0xff545454)),
                               size: height * 0.02,
                             ),
                             label: Text(
-                              editProfileController.securityUnlocked.value
-                                  ? 'Unlocked'
-                                  : 'Unlock changes',
+                              isSecurityValid ? 'Unlocked' : 'Unlock changes',
                               style: TextStyle(
                                 color:
                                     isGoogleUser
                                         ? Colors.grey
-                                        : (editProfileController
-                                                .securityUnlocked
-                                                .value
+                                        : (isSecurityValid
                                             ? Colors.green
                                             : Color(0xff545454)),
                                 fontWeight: FontWeight.w600,
@@ -382,10 +349,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       // Email field (gated by unlock)
                       if (!isGoogleUser) ...[
                         AbsorbPointer(
-                          absorbing:
-                              !editProfileController.securityUnlocked.value,
+                          absorbing: !isSecurityValid,
                           child: ZEditTextField(
                             controller: emailController,
+                            style: TextStyle(
+                              color:
+                                  isSecurityValid
+                                      ? Color(0xff545454)
+                                      : Color(0xff545454).withAlpha(150),
+                            ),
                             labelText: 'Email',
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -398,13 +370,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             },
                           ),
                         ),
-                        if (!editProfileController.securityUnlocked.value)
+                        if (!isSecurityValid)
                           Padding(
                             padding: EdgeInsets.only(top: height * 0.01),
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'Unlock to edit',
+                                'Unlock to edit email',
                                 style: TextStyle(
                                   color: Color(0xff545454).withAlpha(150),
                                   fontSize: height * 0.015,
@@ -444,10 +416,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           value:
                               editProfileController.wantsToChangePassword.value,
                           onChanged:
-                              (!isGoogleUser &&
-                                      editProfileController
-                                          .securityUnlocked
-                                          .value)
+                              (!isGoogleUser && isSecurityValid)
                                   ? (val) =>
                                       editProfileController
                                           .wantsToChangePassword
@@ -463,9 +432,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ZEditPasswordTextField(
                           controller: newPasswordController,
                           labelText: 'New Password',
-                          isEnabled:
-                              editProfileController.securityUnlocked.value &&
-                              !isGoogleUser,
+                          isEnabled: isSecurityValid && !isGoogleUser,
                           onDisabledTap: () {
                             Get.snackbar(
                               'Error',
@@ -481,10 +448,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             if (editProfileController
                                 .wantsToChangePassword
                                 .value) {
-                              if (value != null && value.isNotEmpty) {
-                                if (value.length < 8) {
-                                  return 'New Password must be at least 8 characters long';
-                                }
+                              if (value == null || value.isEmpty) {
+                                return 'New Password is required';
+                              }
+                              if (value.length < 8) {
+                                return 'New Password must be at least 8 characters long';
                               }
                             }
                             return null;
@@ -493,9 +461,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         SizedBox(height: height * 0.02),
                         ZEditConfirmPasswordTextField(
                           controller: confirmPasswordController,
-                          isEnabled:
-                              editProfileController.securityUnlocked.value &&
-                              !isGoogleUser,
+                          isEnabled: isSecurityValid && !isGoogleUser,
                           onDisabledTap: () {
                             Get.snackbar(
                               'Error',
@@ -512,10 +478,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             if (editProfileController
                                 .wantsToChangePassword
                                 .value) {
-                              if (value != null && value.isNotEmpty) {
-                                if (value != newPasswordController.text) {
-                                  return 'Passwords do not match';
-                                }
+                              if (value == null || value.isEmpty) {
+                                return 'Confirm New Password is required';
+                              }
+                              if (value != newPasswordController.text) {
+                                return 'Passwords do not match';
                               }
                             }
                             return null;
@@ -555,16 +522,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   bool emailUpdated = false;
                                   bool profileUpdated = false;
                                   bool passwordUpdated = false;
-                                  if (!isGoogleUser &&
-                                      currentEmail != emailController.text) {
-                                    await editProfileController.editEmail(
-                                      newEmail: emailController.text,
-                                      currentPassword:
-                                          oldPasswordController.text,
-                                      oldEmail: currentEmail,
-                                    );
-                                    emailUpdated = true;
-                                  }
+
                                   if (currentName != nameController.text ||
                                       currentCity != cityController.text) {
                                     await editProfileController
@@ -574,24 +532,71 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         });
                                     profileUpdated = true;
                                   }
-                                  if (oldPasswordController.text.isNotEmpty &&
-                                      newPasswordController.text.isNotEmpty &&
-                                      confirmPasswordController
-                                          .text
-                                          .isNotEmpty) {
-                                    await editProfileController.changePassword(
-                                      currentPassword:
-                                          oldPasswordController.text,
-                                      newPassword: newPasswordController.text,
+                                  if (editProfileController.isPasswordValid) {
+                                    if (!isGoogleUser &&
+                                        currentEmail != emailController.text) {
+                                      await editProfileController.editEmail(
+                                        newEmail: emailController.text,
+                                        currentPassword:
+                                            editProfileController
+                                                .storedPassword ??
+                                            "",
+                                        oldEmail: currentEmail,
+                                      );
+                                      emailUpdated = true;
+                                    }
+                                    if (editProfileController.storedPassword !=
+                                            null &&
+                                        newPasswordController.text.isNotEmpty &&
+                                        confirmPasswordController
+                                            .text
+                                            .isNotEmpty) {
+                                      await editProfileController
+                                          .changePassword(
+                                            currentPassword:
+                                                editProfileController
+                                                    .storedPassword ??
+                                                "",
+                                            newPassword:
+                                                newPasswordController.text,
+                                          );
+                                      passwordUpdated = true;
+                                    }
+                                  } else {
+                                    Get.snackbar(
+                                      'Error',
+                                      "Security session expired, please unlock to continue",
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.red[100],
+                                      colorText: Colors.red[900],
+                                      duration: Duration(seconds: 2),
                                     );
-                                    passwordUpdated = true;
                                   }
-                                  if (profileUpdated &&
+                                  if (passwordUpdated &&
                                       emailUpdated &&
-                                      passwordUpdated) {
+                                      profileUpdated) {
                                     Get.snackbar(
                                       'Success',
                                       "Profile updated successfully, an email has been sent to ${appService.user.value?.newTempEmail} to verify the new email",
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.green[100],
+                                      colorText: Colors.green[900],
+                                      duration: Duration(seconds: 2),
+                                    );
+                                  } else if (emailUpdated && passwordUpdated) {
+                                    Get.snackbar(
+                                      'Success',
+                                      "Password updated successfully, an email has been sent to ${appService.user.value?.newTempEmail} to verify the new email",
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.green[100],
+                                      colorText: Colors.green[900],
+                                      duration: Duration(seconds: 2),
+                                    );
+                                  } else if (passwordUpdated &&
+                                      profileUpdated) {
+                                    Get.snackbar(
+                                      'Success',
+                                      "Profile and password updated successfully",
                                       snackPosition: SnackPosition.BOTTOM,
                                       backgroundColor: Colors.green[100],
                                       colorText: Colors.green[900],
@@ -637,7 +642,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   Get.log("Unexpected Error: $e");
                                 } finally {
                                   isLoading.value = false;
-                                  oldPasswordController.clear();
                                   newPasswordController.clear();
                                   confirmPasswordController.clear();
                                 }

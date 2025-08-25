@@ -38,7 +38,7 @@ class WelcomeScreen extends StatelessWidget {
                     height: height * 0.1,
                   ),
                   SizedBox(height: height * 0.02),
-                  // Text
+                  // Welcome Text
                   Text(
                     'Welcome to Unity Volunteer',
                     style: TextStyle(
@@ -47,6 +47,7 @@ class WelcomeScreen extends StatelessWidget {
                       color: Color(0xff545454),
                     ),
                   ),
+                  // Slogan
                   Text(
                     'Unite. Volunteer. Impact.',
                     style: TextStyle(
@@ -55,8 +56,8 @@ class WelcomeScreen extends StatelessWidget {
                       color: Color(0xff545454),
                     ),
                   ),
-                  // Button
                   SizedBox(height: height * 0.15),
+                  // Sign In Button
                   ZSignInButton(
                     text: 'Sign In',
                     onPressed: () {
@@ -69,6 +70,7 @@ class WelcomeScreen extends StatelessWidget {
                     size: Size(width * 0.7, height * 0.05),
                   ),
                   SizedBox(height: height * 0.02),
+                  // Sign Up Button
                   ZSignUpButton(
                     text: 'Sign Up',
                     onPressed: () {
@@ -81,10 +83,10 @@ class WelcomeScreen extends StatelessWidget {
                     size: Size(width * 0.7, height * 0.05),
                   ),
                   SizedBox(height: height * 0.04),
-                  //Deivider
+                  // Divider
                   ZDivider(),
                   SizedBox(height: height * 0.04),
-                  //Google Sign In
+                  // Google Sign In
                   ZGoogleSignInButton(
                     text: 'Google',
                     onPressed: () {
@@ -97,6 +99,7 @@ class WelcomeScreen extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                   SizedBox(height: height * 0.02),
+                  // Guest Text Button
                   ZGuestTextButton(
                     text: "Continue as a guest",
                     onPressed: () {
@@ -106,6 +109,16 @@ class WelcomeScreen extends StatelessWidget {
                     fontSize: width * 0.035,
                     fontWeight: FontWeight.w500,
                     textDecoration: TextDecoration.underline,
+                  ),
+                  SizedBox(height: height * 0.02),
+                  // Version Text
+                  Text(
+                    'Version 1.0.0',
+                    style: TextStyle(
+                      fontSize: width * 0.035,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff545454).withAlpha(60),
+                    ),
                   ),
                 ],
               ),

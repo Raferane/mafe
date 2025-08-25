@@ -11,31 +11,31 @@ class EditProfileController extends GetxController {
   final _user = Rxn<User>();
   final _isPasswordVisible = true.obs;
   final _isConfirmPasswordVisible = true.obs;
-  final _isOldPasswordVisible = true.obs;
   final _isOldPasswordEntered = false.obs;
   final _securityUnlocked = false.obs;
   final _wantsToChangePassword = false.obs;
-  final _recentPassword = ''.obs;
+  final _recentPassword = Rxn<String>();
 
   RxBool get isLoading => _isLoading;
   Rxn<User> get user => _user;
   RxBool get isPasswordVisible => _isPasswordVisible;
   RxBool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
-  RxBool get isOldPasswordVisible => _isOldPasswordVisible;
   RxBool get isOldPasswordEntered => _isOldPasswordEntered;
   RxBool get securityUnlocked => _securityUnlocked;
   RxBool get wantsToChangePassword => _wantsToChangePassword;
-  RxString get recentPassword => _recentPassword;
+  bool get isPasswordValid => _recentPassword.value != null;
+  String? get storedPassword => _recentPassword.value;
+
+  @override
+  void onClose() {
+    _clearStoredPassword();
+    super.onClose();
+  }
 
   // update user
   Future<void> editUser(String uid, Map<String, dynamic> data) async {
     await _db.collection('users').doc(uid).update(data);
     await _appService.fetchUser(uid);
-  }
-
-  // toggle old password visibility
-  void toggleOldPasswordVisibility() {
-    _isOldPasswordVisible.value = !_isOldPasswordVisible.value;
   }
 
   // toggle password visibility
@@ -63,22 +63,8 @@ class EditProfileController extends GetxController {
       await _db.collection('users').doc(_auth.currentUser!.uid).update({
         'newTempEmail': newEmail,
       });
-      Get.log("new temp email added to the database");
-      //re-authenticating the user
-      await _auth.currentUser
-          ?.reauthenticateWithCredential(
-            EmailAuthProvider.credential(
-              email: oldEmail,
-              password: currentPassword,
-            ),
-          )
-          .then((value) {
-            Get.log("re-authenticated");
-          });
-      Get.log("email updated in the database");
       //re-fetching the user
       await _appService.fetchUser(_auth.currentUser!.uid);
-      Get.log("Email updated successfully");
     } on FirebaseAuthException catch (e) {
       String message;
       switch (e.code) {
@@ -119,12 +105,6 @@ class EditProfileController extends GetxController {
       if (e.code == 'requires-recent-login') {
         // Reauthenticate and retry
         final user = _auth.currentUser!;
-        final email = user.email!;
-        final cred = EmailAuthProvider.credential(
-          email: email,
-          password: currentPassword,
-        );
-        await user.reauthenticateWithCredential(cred);
         await user.updatePassword(newPassword);
       } else {
         // Handle other errors
@@ -153,6 +133,8 @@ class EditProfileController extends GetxController {
           .then((value) {
             Get.log("Password is Correct");
           });
+      _recentPassword.value = currentPassword;
+      _securityUnlocked.value = true;
     } on FirebaseAuthException catch (e) {
       String message;
       switch (e.code) {
@@ -170,5 +152,11 @@ class EditProfileController extends GetxController {
     } catch (e) {
       throw "An unexpected error occurred $e";
     }
+  }
+
+  void _clearStoredPassword() {
+    _recentPassword.value = null;
+    _securityUnlocked.value = false;
+    _wantsToChangePassword.value = false;
   }
 }
