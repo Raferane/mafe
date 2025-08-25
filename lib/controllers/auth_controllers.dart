@@ -42,7 +42,7 @@ class AuthController extends GetxController {
 
   // Unfocus Keyboard when tapping outside
   void unfocusKeyboard() {
-    FocusManager.instance.primaryFocus?.unfocus();
+    WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
   }
 
   bool isValidName(String name) {

@@ -4,11 +4,13 @@ class ZEditTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final String? Function(String?)? validator;
+  final TextStyle? style;
   const ZEditTextField({
     super.key,
     required this.controller,
     required this.labelText,
     this.validator,
+    this.style,
   });
 
   @override
@@ -16,8 +18,9 @@ class ZEditTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: validator,
+      style: style,
       onTapOutside: (event) {
-        FocusScope.of(context).unfocus();
+        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       },
       decoration: InputDecoration(
         labelText: labelText,

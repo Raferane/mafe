@@ -18,6 +18,7 @@ class AdminPanelController extends GetxController {
   final _titleController = TextEditingController();
   final _descController = TextEditingController();
   final _locationController = TextEditingController();
+  final _organizationController = TextEditingController();
 
   // Getters
   RxBool get isLoading => _isLoading;
@@ -29,6 +30,7 @@ class AdminPanelController extends GetxController {
   TextEditingController get titleController => _titleController;
   TextEditingController get descController => _descController;
   TextEditingController get locationController => _locationController;
+  TextEditingController get organizationController => _organizationController;
 
   get tabController => null;
 
@@ -44,6 +46,7 @@ class AdminPanelController extends GetxController {
     _titleController.dispose();
     _descController.dispose();
     _locationController.dispose();
+    _organizationController.dispose();
     super.onClose();
   }
 
@@ -102,6 +105,7 @@ class AdminPanelController extends GetxController {
           'location': updatedEvent.location,
           'dateTime': Timestamp.fromDate(updatedEvent.dateTime),
           'updatedAt': Timestamp.now(),
+          'organization': updatedEvent.organization,
         });
     await loadAllEvents();
     Get.back();
@@ -119,6 +123,7 @@ class AdminPanelController extends GetxController {
       _descController.text = event.description;
       _locationController.text = event.location;
       _selectedDateTime.value = event.dateTime;
+      _organizationController.text = event.organization;
     } else {
       resetForm();
     }
@@ -129,6 +134,7 @@ class AdminPanelController extends GetxController {
     _descController.clear();
     _locationController.clear();
     _selectedDateTime.value = null;
+    _organizationController.clear();
   }
 
   bool validateForm() {
@@ -148,6 +154,10 @@ class AdminPanelController extends GetxController {
       _toastError('Please select date and time');
       return false;
     }
+    if (_organizationController.text.trim().isEmpty) {
+      _toastError('Organization is required');
+      return false;
+    }
     return true;
   }
 
@@ -165,6 +175,7 @@ class AdminPanelController extends GetxController {
           createdBy: eventToEdit.createdBy,
           participants: eventToEdit.participants,
           isActive: eventToEdit.isActive,
+          organization: eventToEdit.organization,
         );
         await updateEvent(updated);
       } else {
@@ -174,9 +185,10 @@ class AdminPanelController extends GetxController {
           description: _descController.text.trim(),
           location: _locationController.text.trim(),
           dateTime: _selectedDateTime.value!,
-          createdBy: '',
+          createdBy: 'Admin',
           participants: [],
           isActive: true,
+          organization: _organizationController.text.trim(),
         );
         await createEvent(created);
       }

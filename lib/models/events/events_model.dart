@@ -9,6 +9,7 @@ class Event {
   final String createdBy;
   final List<String> participants;
   final bool isActive;
+  final String organization;
 
   Event({
     required this.id,
@@ -19,6 +20,7 @@ class Event {
     required this.createdBy,
     required this.participants,
     this.isActive = true,
+    required this.organization,
   });
 
   // Factory constructor to create Event from Firestore
@@ -33,6 +35,7 @@ class Event {
       createdBy: data['createdBy'] ?? '',
       participants: List<String>.from(data['participants'] ?? []),
       isActive: data['isActive'] ?? true,
+      organization: data['organization'] ?? '',
     );
   }
 
@@ -46,6 +49,7 @@ class Event {
       'createdBy': createdBy,
       'participants': participants,
       'isActive': isActive,
+      'organization': organization,
     };
   }
 }
