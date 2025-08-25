@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unity_project/models/services/app_service.dart';
+import 'package:unity_project/models/utility/Components/guest_restrication_dialog.dart';
 import 'package:unity_project/routes/app_routes.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
+  // Handle edit profile with guest check
+  void _handleEditProfile() {
+    final appService = Get.find<AppService>();
+
+    if (appService.isGuestUser()) {
+      Get.dialog(
+        const GuestRestrictionDialog(
+          title: 'Sign In Required',
+          message: 'To edit your profile, please sign in to your account.',
+        ),
+      );
+      return;
+    }
+
+    Get.toNamed(AppRoutes.editProfile);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +127,7 @@ class ProfileScreen extends StatelessWidget {
                     SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () {
-                        Get.toNamed(AppRoutes.editProfile);
+                        _handleEditProfile();
                       },
                       child: Text('Edit Profile'),
                     ),

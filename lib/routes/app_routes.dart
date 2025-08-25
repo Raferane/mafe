@@ -11,4 +11,7 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String createEventScreen = '/createEventScreen';
   static const String editProfile = '/editProfile';
+  static const String aboutus = '/aboutus';
+  static const String contactus = '/contactus';
+  static const String eventDetail = '/eventDetail';
 }

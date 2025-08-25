@@ -7,8 +7,9 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:unity_project/Views/Bottom_screens/Favorites/favorites_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/profile_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/search/search_screen.dart';
+import 'package:unity_project/controllers/home_controller.dart';
+import 'package:unity_project/Views/home/home_components/event_card.dart';
 import 'package:unity_project/models/services/app_service.dart';
-
 import 'package:unity_project/routes/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  final controller = Get.find<HomeController>();
   // Current selected index for bottom navigation
   int _currentIndex = 0;
 
@@ -72,15 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             SizedBox(height: height * 0.03),
-            // Add more ListTiles as needed
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                Get.toNamed(AppRoutes.settings);
-              },
-            ),
-            SizedBox(height: height * 0.03),
 
             //Admin Panel - Only for admin
             Obx(() {
@@ -107,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Icon(Icons.info),
               title: Text('About Us'),
               onTap: () {
-                Navigator.pop(context);
+                Get.toNamed(AppRoutes.aboutus);
               },
             ),
             SizedBox(height: height * 0.03),
@@ -115,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Icon(Icons.help),
               title: Text('Contact Us'),
               onTap: () {
-                Navigator.pop(context);
+                Get.toNamed(AppRoutes.contactus);
               },
             ),
             SizedBox(height: height * 0.15),
@@ -170,6 +162,46 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(72),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xffedf2f4),
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xff545454).withAlpha(50),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: _searchController,
+                onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                decoration: InputDecoration(
+                  hintText: 'Search for events, activities...',
+                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey[400],
+                    size: 24,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                ),
+                onChanged: (value) {
+                  // Hook into HomeController filtering if you want live filter
+                },
+              ),
+            ),
+          ),
+        ),
       ),
       body: IndexedStack(
         index: _currentIndex,
@@ -180,124 +212,152 @@ class _HomeScreenState extends State<HomeScreen> {
               horizontal: width * 0.05,
               vertical: height * 0.02,
             ),
-            child: Column(
-              children: [
-                // Title and Logo Row
-                SizedBox(height: height * 0.02),
-                // Search Field
-                Container(
-                  margin: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Color(0xffedf2f4),
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xff545454).withAlpha(50),
-                        blurRadius: 10,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                    decoration: InputDecoration(
-                      hintText: 'Search for events, activities...',
-                      hintStyle: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 16,
-                      ),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey[400],
-                        size: 24,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 16,
-                      ),
-                    ),
-                    onChanged: (value) {
-                      // Handle search functionality
-                      print('Searching for: $value');
-                    },
-                  ),
-                ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Title and Logo Row
+                  SizedBox(height: height * 0.02),
 
-                SizedBox(height: 20),
+                  // Search Field
+                  //
+                  SizedBox(height: 20),
 
-                // Carousel Slider
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4),
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      height: 200.0,
-                      enlargeCenterPage: true,
-                      autoPlay: true,
-                      aspectRatio: 16 / 9,
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                      enableInfiniteScroll: true,
-                      autoPlayAnimationDuration: Duration(milliseconds: 800),
-                      viewportFraction: 0.9,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _currentCarouselIndex = index;
-                        });
-                      },
-                    ),
-                    items:
-                        carouselImages.map((String imagePath) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withAlpha(20),
-                                      blurRadius: 10,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image.asset(
-                                    imagePath,
-                                    fit: BoxFit.cover,
+                  // Carousel Slider
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 4),
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        height: 200.0,
+                        enlargeCenterPage: true,
+                        autoPlay: true,
+                        aspectRatio: 16 / 9,
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enableInfiniteScroll: true,
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        viewportFraction: 0.9,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _currentCarouselIndex = index;
+                          });
+                        },
+                      ),
+                      items:
+                          carouselImages.map((String imagePath) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withAlpha(20),
+                                        blurRadius: 10,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              );
-                            },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Image.asset(
+                                      imagePath,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }).toList(),
+                    ),
+                  ),
+
+                  // Carousel Indicator
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:
+                        carouselImages.asMap().entries.map((entry) {
+                          return Container(
+                            width: 8.0,
+                            height: 8.0,
+                            margin: EdgeInsets.symmetric(horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:
+                                  _currentCarouselIndex == entry.key
+                                      ? Color(0xff545454) // Active indicator
+                                      : Colors.grey[400], // Inactive indicator
+                            ),
                           );
                         }).toList(),
                   ),
-                ),
-
-                // Carousel Indicator
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:
-                      carouselImages.asMap().entries.map((entry) {
-                        return Container(
-                          width: 8.0,
-                          height: 8.0,
-                          margin: EdgeInsets.symmetric(horizontal: 4.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                _currentCarouselIndex == entry.key
-                                    ? Color(0xff545454) // Active indicator
-                                    : Colors.grey[400], // Inactive indicator
+                  SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Upcoming Events',
+                        style: TextStyle(
+                          fontSize: width * 0.04,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff545454),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {}, // optional: navigate to a full list
+                        child: Text(
+                          'See all',
+                          style: TextStyle(
+                            fontSize: width * 0.04,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xff545454),
                           ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Obx(() {
+                    final items = controller.events;
+                    if (items.isEmpty) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 24),
+                          child: Text('No events yet.'),
+                        ),
+                      );
+                    }
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 1, // change to 2 for wider screens
+                            childAspectRatio: 16 / 10,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                          ),
+                      itemCount: items.length,
+                      itemBuilder: (_, i) {
+                        final e = items[i];
+                        final isFav = controller.favoriteEventIds.contains(
+                          e.id,
                         );
-                      }).toList(),
-                ),
-              ],
+                        return EventCard(
+                          event: e,
+                          isFavorite: isFav,
+                          onFavoriteToggle: () => controller.toggleFavorite(e),
+                          onTap: () {
+                            // optional: navigate to details
+                          },
+                          heroTag: 'event_card_${e.id}_$i',
+                        );
+                      },
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
           SearchScreen(),

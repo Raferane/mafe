@@ -1,0 +1,106 @@
+// lib/controllers/home_controller.dart
+import 'dart:async';
+import 'package:get/get.dart';
+import 'package:unity_project/models/services/app_service.dart';
+import 'package:unity_project/models/services/event_repository.dart';
+import 'package:unity_project/models/services/favorites_repository.dart';
+import 'package:unity_project/models/events/events_model.dart';
+import 'package:unity_project/models/utility/Components/guest_restrication_dialog.dart';
+
+class HomeController extends GetxController {
+  HomeController(
+    this._eventRepository,
+    this._favoritesRepository,
+    this._appService,
+  );
+
+  final EventRepository _eventRepository;
+  final FavoritesRepository _favoritesRepository;
+  final AppService _appService;
+
+  final RxList<Event> events = <Event>[].obs;
+  final RxSet<String> favoriteEventIds = <String>{}.obs;
+
+  StreamSubscription<List<Event>>? _eventsSub;
+  StreamSubscription<Set<String>>? _favoritesSub;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _eventsSub = _eventRepository.WatchApprovedEvents().listen(
+      events.assignAll,
+    );
+
+    final userId = _appService.user.value?.uid;
+    if (userId != null) {
+      _favoritesSub = _favoritesRepository
+          .favoriteEventIdsStream(userId)
+          .listen((ids) {
+            favoriteEventIds
+              ..clear()
+              ..addAll(ids);
+          });
+    }
+  }
+
+  // Add guest check to toggleFavorite
+  Future<void> toggleFavorite(Event event) async {
+    if (_appService.isGuestUser()) {
+      Get.dialog(
+        const GuestRestrictionDialog(
+          title: 'Sign In Required',
+          message:
+              'To save events to your favorites, please sign in to your account.',
+        ),
+      );
+      return;
+    }
+
+    final userId = _appService.user.value?.uid;
+    if (userId == null) return;
+
+    final isFav = favoriteEventIds.contains(event.id);
+    if (isFav) {
+      await _favoritesRepository.toggleFavorite(
+        userId: userId,
+        eventId: event.id,
+      );
+    } else {
+      await _favoritesRepository.toggleFavorite(
+        userId: userId,
+        eventId: event.id,
+      );
+    }
+  }
+
+  bool isUserParticipating(Event event) {
+    final userId = _appService.user.value?.uid;
+    if (userId == null) return false;
+    return event.participants.contains(userId);
+  }
+
+  // Add guest check to toggleParticipation
+  Future<void> toggleParticipation(Event event) async {
+    if (_appService.isGuestUser()) {
+      Get.dialog(
+        const GuestRestrictionDialog(
+          title: 'Sign In Required',
+          message: 'To join activities  please sign in to your account.',
+        ),
+      );
+      return;
+    }
+
+    final userId = _appService.user.value?.uid;
+    if (userId == null) return;
+
+    await _eventRepository.toggleParticipation(event.id, userId);
+  }
+
+  @override
+  void onClose() {
+    _eventsSub?.cancel();
+    _favoritesSub?.cancel();
+    super.onClose();
+  }
+}

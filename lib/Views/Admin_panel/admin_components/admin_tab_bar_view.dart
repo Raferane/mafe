@@ -61,13 +61,13 @@ class AdminTabBarView extends StatelessWidget {
               right: 24,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  gradient: LinearGradient(
+                    colors: [Color(0xff545454), Color(0xff545454)],
                   ),
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF667EEA).withOpacity(0.3),
+                      color: Color(0xff545454).withAlpha(30),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),

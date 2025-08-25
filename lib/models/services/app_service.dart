@@ -59,6 +59,12 @@ class AppService extends GetxService {
     }
   }
 
+  // Check if current user is a guest
+  bool isGuestUser() {
+    final currentUser = _auth.currentUser;
+    return currentUser?.isAnonymous ?? true;
+  }
+
   // sign out
   Future<void> signOut() async {
     _auth.signOut();
