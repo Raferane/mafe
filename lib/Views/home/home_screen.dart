@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:lottie/lottie.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:unity_project/Views/Bottom_screens/Favorites/favorites_screen.dart';
 import 'package:unity_project/Views/Bottom_screens/profile/profile_screen.dart';
@@ -127,8 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(0xffedf2f4),
         elevation: 0,
+        surfaceTintColor: Color(0xffedf2f4),
         automaticallyImplyLeading: false,
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,9 +165,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: width * 0.05,
-              vertical: height * 0.02,
+            padding: EdgeInsets.only(
+              left: width * 0.05,
+              right: width * 0.05,
+              top: height * 0.02,
             ),
             child: SingleChildScrollView(
               child: Column(
@@ -190,8 +193,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: TextField(
                         controller: _searchController,
-                        onTapOutside:
-                            (event) => FocusScope.of(context).unfocus(),
+                        onTapOutside: (event) {
+                          WidgetsBinding.instance.focusManager.primaryFocus
+                              ?.unfocus();
+                        },
+                        onSubmitted: (value) {
+                          WidgetsBinding.instance.focusManager.primaryFocus
+                              ?.unfocus();
+                        },
                         decoration: InputDecoration(
                           hintText: 'Search for events, activities...',
                           hintStyle: TextStyle(
@@ -203,6 +212,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.grey[400],
                             size: 24,
                           ),
+                          suffixIcon: Obx(() {
+                            final hasText =
+                                controller.searchQuery.value.isNotEmpty;
+                            if (!hasText) return SizedBox.shrink();
+                            return IconButton(
+                              icon: Icon(
+                                Icons.clear,
+                                color: Color(0xff545454).withAlpha(170),
+                              ),
+                              onPressed: () {
+                                _searchController.clear();
+                                controller.setSearchQuery('');
+                                WidgetsBinding
+                                    .instance
+                                    .focusManager
+                                    .primaryFocus
+                                    ?.unfocus();
+                              },
+                            );
+                          }),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 20,
@@ -210,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         onChanged: (value) {
-                          // Hook into HomeController filtering if you want live filter
+                          controller.setSearchQuery(value);
                         },
                       ),
                     ),
@@ -315,12 +344,56 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 12),
                   Obx(() {
-                    final items = controller.events;
+                    final items = controller.visibleEvents;
                     if (items.isEmpty) {
-                      return const Center(
+                      final q = controller.searchQuery.value.trim();
+                      return Center(
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Text('No events yet.'),
+                          child:
+                              q.isEmpty
+                                  ? Center(
+                                    child: Column(
+                                      children: [
+                                        Lottie.asset(
+                                          'assets/lottie/noResult.json',
+                                          width: width * 0.5,
+                                          height: height * 0.2,
+                                          fit: BoxFit.fitWidth,
+                                        ),
+                                        Text(
+                                          'No events yet.',
+                                          style: TextStyle(
+                                            color: Color(
+                                              0xff545454,
+                                            ).withAlpha(100),
+                                            fontSize: height * 0.018,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  : Center(
+                                    child: Column(
+                                      children: [
+                                        Lottie.asset(
+                                          'assets/lottie/noResult.json',
+                                          width: width * 0.5,
+                                          height: height * 0.2,
+                                          fit: BoxFit.fitWidth,
+                                        ),
+                                        Text(
+                                          'No matches for your search.',
+                                          style: TextStyle(
+                                            color: Color(
+                                              0xff545454,
+                                            ).withAlpha(100),
+                                            fontSize: height * 0.018,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                         ),
                       );
                     }

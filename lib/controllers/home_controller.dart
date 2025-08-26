@@ -20,6 +20,7 @@ class HomeController extends GetxController {
 
   final RxList<Event> events = <Event>[].obs;
   final RxSet<String> favoriteEventIds = <String>{}.obs;
+  final RxString searchQuery = ''.obs;
 
   StreamSubscription<List<Event>>? _eventsSub;
   StreamSubscription<Set<String>>? _favoritesSub;
@@ -41,6 +42,12 @@ class HomeController extends GetxController {
               ..addAll(ids);
           });
     }
+
+    debounce<String>(
+      searchQuery,
+      (_) {},
+      time: const Duration(milliseconds: 300),
+    );
   }
 
   // Add guest check to toggleFavorite
@@ -102,5 +109,40 @@ class HomeController extends GetxController {
     _eventsSub?.cancel();
     _favoritesSub?.cancel();
     super.onClose();
+  }
+
+  List<Event> get visibleEvents {
+    final q = searchQuery.value.trim().toLowerCase();
+    if (q.isEmpty) return events;
+
+    bool matches(Event e) {
+      final title = (e.title).toLowerCase();
+      final location = (e.location).toLowerCase();
+      return title.contains(q) || location.contains(q);
+    }
+
+    final filtered = events.where(matches).toList();
+
+    int score(Event e) {
+      final title = (e.title).toLowerCase();
+      final location = (e.location).toLowerCase();
+      if (title.startsWith(q)) return 0;
+      if (location.startsWith(q)) return 1;
+      if (title.contains(q)) return 2;
+      if (location.contains(q)) return 3;
+      return 4;
+    }
+
+    filtered.sort((a, b) {
+      final sa = score(a);
+      final sb = score(b);
+      if (sa == sb) return sa.compareTo(sb); // stable alphabetical
+      return a.title.toLowerCase().compareTo(b.title.toLowerCase());
+    });
+    return filtered;
+  }
+
+  void setSearchQuery(String value) {
+    searchQuery.value = value;
   }
 }

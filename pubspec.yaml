@@ -42,6 +42,7 @@ dependencies:
   salomon_bottom_bar: ^3.3.2
   cloud_firestore: ^5.6.12
   table_calendar: ^3.2.0
+  lottie: ^3.3.1
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +85,8 @@ flutter:
     - assets/support_carousel_slider.png
     - assets/give_carousel_slider.png
     - assets/google_icon.png
+    - assets/lottie/noResult.json
+    - assets/lottie/searchingForResults.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
