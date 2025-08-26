@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
@@ -275,52 +274,50 @@ class AboutUsScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20),
-          ...features
-              .map(
-                (feature) => Padding(
-                  padding: EdgeInsets.only(bottom: 15),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Color(0xff545454).withAlpha(20),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          feature['icon'] as IconData,
-                          color: Color(0xff545454),
-                          size: 20,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              feature['title'] as String,
-                              style: TextStyle(
-                                fontSize: width * 0.04,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff545454),
-                              ),
-                            ),
-                            Text(
-                              feature['desc'] as String,
-                              style: TextStyle(
-                                fontSize: width * 0.035,
-                                color: Color(0xff545454).withAlpha(150),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+          ...features.map(
+            (feature) => Padding(
+              padding: EdgeInsets.only(bottom: 15),
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Color(0xff545454).withAlpha(20),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      feature['icon'] as IconData,
+                      color: Color(0xff545454),
+                      size: 20,
+                    ),
                   ),
-                ),
-              )
-              .toList(),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          feature['title'] as String,
+                          style: TextStyle(
+                            fontSize: width * 0.04,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff545454),
+                          ),
+                        ),
+                        Text(
+                          feature['desc'] as String,
+                          style: TextStyle(
+                            fontSize: width * 0.035,
+                            color: Color(0xff545454).withAlpha(150),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -397,52 +394,50 @@ class AboutUsScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20),
-          ...values
-              .map(
-                (value) => Padding(
-                  padding: EdgeInsets.only(bottom: 15),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Color(0xff545454).withAlpha(20),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          value['icon'] as IconData,
-                          color: Color(0xff545454),
-                          size: 20,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              value['title'] as String,
-                              style: TextStyle(
-                                fontSize: width * 0.04,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff545454),
-                              ),
-                            ),
-                            Text(
-                              value['desc'] as String,
-                              style: TextStyle(
-                                fontSize: width * 0.035,
-                                color: Color(0xff545454).withAlpha(150),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+          ...values.map(
+            (value) => Padding(
+              padding: EdgeInsets.only(bottom: 15),
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Color(0xff545454).withAlpha(20),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      value['icon'] as IconData,
+                      color: Color(0xff545454),
+                      size: 20,
+                    ),
                   ),
-                ),
-              )
-              .toList(),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          value['title'] as String,
+                          style: TextStyle(
+                            fontSize: width * 0.04,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff545454),
+                          ),
+                        ),
+                        Text(
+                          value['desc'] as String,
+                          style: TextStyle(
+                            fontSize: width * 0.035,
+                            color: Color(0xff545454).withAlpha(150),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

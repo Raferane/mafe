@@ -157,46 +157,6 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(72),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xffedf2f4),
-                borderRadius: BorderRadius.circular(25),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xff545454).withAlpha(50),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: _searchController,
-                onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                decoration: InputDecoration(
-                  hintText: 'Search for events, activities...',
-                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey[400],
-                    size: 24,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
-                  ),
-                ),
-                onChanged: (value) {
-                  // Hook into HomeController filtering if you want live filter
-                },
-              ),
-            ),
-          ),
-        ),
       ),
       body: IndexedStack(
         index: _currentIndex,
@@ -214,8 +174,49 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: height * 0.02),
 
                   // Search Field
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xffedf2f4),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff545454).withAlpha(50),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        onTapOutside:
+                            (event) => FocusScope.of(context).unfocus(),
+                        decoration: InputDecoration(
+                          hintText: 'Search for events, activities...',
+                          hintStyle: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 16,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey[400],
+                            size: 24,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                        ),
+                        onChanged: (value) {
+                          // Hook into HomeController filtering if you want live filter
+                        },
+                      ),
+                    ),
+                  ),
                   //
-                  SizedBox(height: 20),
+                  SizedBox(height: height * 0.02),
 
                   // Carousel Slider
                   Container(
@@ -346,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             // optional: navigate to details
                           },
-                          heroTag: 'event_card_${e.id}_$i',
+                          heroTag: '${e.id}_$i',
                         );
                       },
                     );
