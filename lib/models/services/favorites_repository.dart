@@ -4,7 +4,7 @@ class FavoritesRepository {
   FavoritesRepository([FirebaseFirestore? firestore])
     : _db = firestore ?? FirebaseFirestore.instance;
   final FirebaseFirestore _db;
-
+  // stream to get the favorite event ids
   Stream<Set<String>> favoriteEventIdsStream(String userId) {
     return _db
         .collection('users')
@@ -14,6 +14,7 @@ class FavoritesRepository {
         .map((snap) => snap.docs.map((d) => d.id).toSet());
   }
 
+  // toggle favorite
   Future<void> toggleFavorite({
     required String userId,
     required String eventId,

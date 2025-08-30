@@ -64,9 +64,7 @@ class EventDetail extends StatelessWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.share, color: Colors.white),
-                onPressed: () {
-                  // TODO: Implement share functionality
-                },
+                onPressed: () {},
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
@@ -109,7 +107,7 @@ class EventDetail extends StatelessWidget {
                           Row(
                             children: [
                               const Icon(
-                                Icons.place,
+                                Icons.location_on,
                                 color: Colors.white70,
                                 size: 16,
                               ),
@@ -209,14 +207,14 @@ class EventDetail extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.location_on,
+                          Icons.business,
                           color: const Color(0xff545454),
                           size: 24,
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            event.location,
+                            event.organization,
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -270,7 +268,6 @@ class EventDetail extends StatelessWidget {
 
                   const SizedBox(height: 16),
 
-                  // Replace the participants section with:
                   Obx(() {
                     final currentEvent =
                         controller.events.firstWhereOrNull(
@@ -304,6 +301,7 @@ class EventDetail extends StatelessWidget {
                               size: 24,
                             ),
                             const SizedBox(width: 12),
+                            // participants section
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,6 +315,7 @@ class EventDetail extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
+                                  // participation section
                                   Text(
                                     isParticipating
                                         ? 'You are participating'
