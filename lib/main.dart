@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:unity_project/models/services/app_service.dart';
 import 'package:unity_project/routes/app_routes.dart';
@@ -7,8 +8,10 @@ import 'package:unity_project/routes/pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // Initialize firebase and app service through the apps lifecycle
   await Firebase.initializeApp();
+
   final appService = Get.put(AppService(), permanent: true);
   // Global error handling
   FlutterError.onError = (FlutterErrorDetails details) {

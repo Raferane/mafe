@@ -28,7 +28,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _eventsSub = _eventRepository.WatchApprovedEvents().listen(
+    _eventsSub = _eventRepository.watchApprovedEvents().listen(
       events.assignAll,
     );
 
@@ -50,7 +50,7 @@ class HomeController extends GetxController {
     );
   }
 
-  // Add guest check to toggleFavorite
+  // guest check to toggleFavorite
   Future<void> toggleFavorite(Event event) async {
     if (_appService.isGuestUser()) {
       Get.dialog(
@@ -86,7 +86,7 @@ class HomeController extends GetxController {
     return event.participants.contains(userId);
   }
 
-  // Add guest check to toggleParticipation
+  // guest check to toggleParticipation
   Future<void> toggleParticipation(Event event) async {
     if (_appService.isGuestUser()) {
       Get.dialog(

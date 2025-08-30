@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactUsScreen extends StatefulWidget {
   const ContactUsScreen({super.key});
@@ -21,6 +22,11 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     final height = size.height;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xffedf2f4),
+        surfaceTintColor: Color(0xffedf2f4),
+        elevation: 0,
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -81,14 +87,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                 ),
               ],
             ),
-            child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Color(0xff545454)),
-              onPressed: () => Navigator.pop(context),
-            ),
           ),
         ),
 
-        SizedBox(height: 30),
+        SizedBox(height: height * 0.03),
 
         // Title Section
         Container(
@@ -119,24 +121,24 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                 ),
                 child: Icon(
                   Icons.contact_support,
-                  size: 50,
+                  size: height * 0.05,
                   color: Color(0xff545454),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: height * 0.02),
               Text(
                 'Get in Touch',
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: height * 0.03,
                   fontWeight: FontWeight.bold,
                   color: Color(0xff545454),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: height * 0.01),
               Text(
                 'We\'re here to help you',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: height * 0.02,
                   color: Color(0xff545454).withAlpha(70),
                 ),
               ),
@@ -154,12 +156,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         Text(
           'Quick Contact',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: height * 0.02,
             fontWeight: FontWeight.bold,
             color: Color(0xff545454),
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: height * 0.02),
         Row(
           children: [
             Expanded(
@@ -181,7 +183,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
             ),
           ],
         ),
-        SizedBox(height: 15),
+        SizedBox(height: height * 0.015),
         Row(
           children: [
             Expanded(
@@ -306,7 +308,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                 _buildTextField(
                   controller: _nameController,
                   label: 'Your Name',
-                  icon: Icons.person,
+
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name';
@@ -318,7 +320,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                 _buildTextField(
                   controller: _emailController,
                   label: 'Email Address',
-                  icon: Icons.email,
+
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
@@ -335,7 +337,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                 _buildTextField(
                   controller: _messageController,
                   label: 'Message',
-                  icon: Icons.edit,
+
                   maxLines: 4,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -381,7 +383,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
-    required IconData icon,
+
     int maxLines = 1,
     String? Function(String?)? validator,
   }) {
@@ -393,7 +395,9 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: Color(0xff545454).withAlpha(60)),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        floatingLabelStyle: TextStyle(color: Color(0xff545454)),
+
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Color(0xff545454).withAlpha(20)),
@@ -478,10 +482,14 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildSocialButton(Icons.facebook, Colors.blue, ""),
-              _buildSocialButton(Icons.flutter_dash, Colors.lightBlue, ""),
-              _buildSocialButton(Icons.camera_alt, Colors.purple, ""),
-              _buildSocialButton(Icons.work, Colors.blue[700]!, ""),
+              _buildSocialButton(FontAwesomeIcons.facebook, Colors.blue, ""),
+              _buildSocialButton(
+                FontAwesomeIcons.instagram,
+                Color(0xFFEF4444),
+                "",
+              ),
+              _buildSocialButton(FontAwesomeIcons.linkedin, Colors.blue, ""),
+              _buildSocialButton(FontAwesomeIcons.x, Colors.black, ""),
             ],
           ),
         ],

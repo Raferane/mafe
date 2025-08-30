@@ -37,7 +37,7 @@ class ProfileScreen extends StatelessWidget {
           await appService.restoreUser();
           Get.log(appService.user.value?.toString() ?? 'No user found');
 
-          // Only show success if user is still logged in
+          // snackbar to show success if user is still logged in
           if (appService.user.value != null) {
             Get.snackbar(
               'Success',
@@ -87,7 +87,7 @@ class ProfileScreen extends StatelessWidget {
                           right: 0,
                           child: CircleAvatar(
                             radius: 16,
-                            backgroundColor: Color(0xff545454).withAlpha(200),
+                            backgroundColor: Color(0xff545454),
                             child: Icon(
                               Icons.edit,
                               size: height * 0.02,
@@ -116,9 +116,16 @@ class ProfileScreen extends StatelessWidget {
                     Wrap(
                       spacing: 8,
                       children: [
-                        Chip(label: Text('Top Volunteer')),
-                        Chip(label: Text('10+ Events')),
-                        // ...more badges
+                        Chip(
+                          label: Text('Top Volunteer'),
+                          backgroundColor: Color(0xff545454),
+                          labelStyle: TextStyle(color: Colors.white),
+                        ),
+                        Chip(
+                          label: Text('10+ Events'),
+                          backgroundColor: Color(0xff545454),
+                          labelStyle: TextStyle(color: Colors.white),
+                        ),
                       ],
                     ),
                     SizedBox(height: height * 0.02),
@@ -151,8 +158,8 @@ class ProfileScreen extends StatelessWidget {
                     SizedBox(height: height * 0.03),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffedf2f4).withAlpha(200),
-                        foregroundColor: Color(0xff545454).withAlpha(200),
+                        backgroundColor: Color(0xff545454),
+                        foregroundColor: Color(0xffedf2f4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
                         ),
@@ -164,22 +171,34 @@ class ProfileScreen extends StatelessWidget {
                         'Edit Profile',
                         style: TextStyle(
                           fontSize: height * 0.02,
-                          color: Color(0xff545454).withAlpha(200),
+                          color: Color(0xffedf2f4),
                         ),
                       ),
                     ),
                     SizedBox(height: height * 0.02),
                     ListTile(
-                      leading: Icon(Icons.logout),
-                      title: Text('Logout'),
+                      leading: Icon(Icons.logout, color: Color(0xFFEF4444)),
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(
+                          color: Color(0xFFEF4444),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       onTap: () {
                         Get.find<AppService>().signOut();
                       },
                     ),
                     SizedBox(height: height * 0.01),
                     ListTile(
-                      leading: Icon(Icons.delete_outline),
-                      title: Text('Delete Account'),
+                      leading: Icon(
+                        Icons.delete_outline,
+                        color: Color(0xff545454),
+                      ),
+                      title: Text(
+                        'Delete Account',
+                        style: TextStyle(color: Color(0xff545454)),
+                      ),
                       onTap: () {
                         showDialog(
                           context: context,
@@ -187,15 +206,24 @@ class ProfileScreen extends StatelessWidget {
                               (context) => AlertDialog(
                                 backgroundColor: Color(0xffedf2f4),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                title: Text(
-                                  'Delete Account',
-                                  style: TextStyle(
-                                    fontSize: height * 0.025,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xff545454),
-                                  ),
+                                title: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.warning_amber_rounded,
+                                      color: Color(0xFFEF4444),
+                                      size: 24,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    const Text(
+                                      'Delete Account',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 content: Text(
                                   'Are you sure you want to delete your account?',
@@ -239,7 +267,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // NEW: Email verification status indicator
+            // Email verification status indicator
             Obx(() {
               if (user.value?.newTempEmail != null) {
                 return Container(

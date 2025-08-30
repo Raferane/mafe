@@ -68,9 +68,6 @@ class UpcomingEventsSection extends StatelessWidget {
                       return EventCard(
                         event: e,
                         isFavorite: isFav,
-                        onTap: () {
-                          // Hook to details screen (optional later)
-                        },
                         onFavoriteToggle: () {
                           controller.toggleFavorite(e);
                         },

@@ -9,7 +9,6 @@ import 'package:unity_project/Views/Bottom_screens/search/search_screen.dart';
 import 'package:unity_project/controllers/home_controller.dart';
 import 'package:unity_project/Views/home/home_components/event_card.dart';
 import 'package:unity_project/models/services/app_service.dart';
-import 'package:unity_project/routes/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Current selected index for bottom navigation
   int _currentIndex = 0;
 
-  // List of your asset images for carousel
+  // List of asset images for carousel
   final List<String> carouselImages = [
     'assets/connect_carousel_slider.png',
     'assets/give_carousel_slider.png',
@@ -34,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/impact_carousel_slider.png',
   ];
 
-  // Add this variable to track carousel position
   int _currentCarouselIndex = 0;
 
   @override
@@ -84,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       leading: Icon(Icons.admin_panel_settings),
                       title: Text('Admin Panel'),
                       onTap: () {
-                        Get.toNamed(AppRoutes.adminpanel);
+                        Get.toNamed('/adminpanel');
                       },
                     ),
                     SizedBox(height: height * 0.03),
@@ -98,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Icon(Icons.info),
               title: Text('About Us'),
               onTap: () {
-                Get.toNamed(AppRoutes.aboutus);
+                Get.toNamed('/aboutus');
               },
             ),
             SizedBox(height: height * 0.03),
@@ -106,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Icon(Icons.help),
               title: Text('Contact Us'),
               onTap: () {
-                Get.toNamed(AppRoutes.contactus);
+                Get.toNamed('/contactus');
               },
             ),
             SizedBox(height: height * 0.15),
@@ -252,13 +250,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     margin: EdgeInsets.symmetric(horizontal: 4),
                     child: CarouselSlider(
                       options: CarouselOptions(
-                        height: 200.0,
-                        enlargeCenterPage: true,
+                        height: 180.0,
+                        enlargeCenterPage: false,
                         autoPlay: true,
-                        aspectRatio: 16 / 9,
+                        padEnds: true,
+                        aspectRatio: 16 / 8,
                         autoPlayCurve: Curves.fastOutSlowIn,
                         enableInfiniteScroll: true,
-                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        autoPlayAnimationDuration: Duration(milliseconds: 700),
                         viewportFraction: 0.9,
                         onPageChanged: (index, reason) {
                           setState(() {
@@ -330,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {}, // optional: navigate to a full list
+                        onPressed: () {},
                         child: Text(
                           'See all',
                           style: TextStyle(
@@ -402,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1, // change to 2 for wider screens
+                            crossAxisCount: 1,
                             childAspectRatio: 16 / 10,
                             mainAxisSpacing: 12,
                             crossAxisSpacing: 12,
@@ -417,9 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           event: e,
                           isFavorite: isFav,
                           onFavoriteToggle: () => controller.toggleFavorite(e),
-                          onTap: () {
-                            // optional: navigate to details
-                          },
+
                           heroTag: '${e.id}_$i',
                         );
                       },
