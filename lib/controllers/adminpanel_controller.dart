@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unity_project/models/events/events_model.dart';
 import 'package:unity_project/models/user/app_user.dart';
-import 'package:unity_project/routes/app_routes.dart';
 
 class AdminPanelController extends GetxController {
   // Reactive state
@@ -175,7 +174,7 @@ class AdminPanelController extends GetxController {
           createdBy: eventToEdit.createdBy,
           participants: eventToEdit.participants,
           isActive: eventToEdit.isActive,
-          organization: eventToEdit.organization,
+          organization: _organizationController.text.trim(),
         );
         await updateEvent(updated);
       } else {
@@ -258,19 +257,20 @@ class AdminPanelController extends GetxController {
     );
   }
 
-  // Navigation from Events tab (uses your named route)
+  // Navigation from Events tab
   void editEvent(Event event) {
-    Get.toNamed(AppRoutes.createEventScreen, arguments: event);
+    Get.toNamed('/createEventScreen', arguments: event);
   }
 
   Future<void> createNewEvent() async {
-    final result = await Get.toNamed(AppRoutes.createEventScreen);
+    final result = await Get.toNamed('/createEventScreen');
     if (result == true) await loadAllEvents();
   }
 
   void showDeleteDialog(Event event) {
     Get.dialog(
       AlertDialog(
+        backgroundColor: Color(0xffedf2f4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
@@ -287,7 +287,7 @@ class AdminPanelController extends GetxController {
           ],
         ),
         content: Text(
-          'Are you sure you want to delete "${event.title}"? This action cannot be undone.',
+          'Are you sure you want to delete ${event.title}? This action cannot be undone.',
           style: const TextStyle(fontSize: 14, color: Color(0xFF64748B)),
         ),
         actions: [
@@ -301,21 +301,16 @@ class AdminPanelController extends GetxController {
               ),
             ),
           ),
-          ElevatedButton(
+          TextButton(
             onPressed: () {
               deleteEvent(event.id);
               Get.back();
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEF4444),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+
             child: const Text(
               'Delete',
               style: TextStyle(
-                color: Colors.white,
+                color: Color(0xFFEF4444),
                 fontWeight: FontWeight.w600,
               ),
             ),

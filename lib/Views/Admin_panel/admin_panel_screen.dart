@@ -16,7 +16,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
       child: Scaffold(
         backgroundColor: Color(0xffedf2f4),
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Color(0xffedf2f4),
+          surfaceTintColor: Color(0xffedf2f4),
           elevation: 0,
 
           title: Text(

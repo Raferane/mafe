@@ -44,6 +44,7 @@ dependencies:
   table_calendar: ^3.2.0
   lottie: ^3.3.1
 
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
@@ -99,6 +100,8 @@ flutter:
     - assets/google_icon.png
     - assets/lottie/noResult.json
     - assets/lottie/searchingForResults.json
+    - assets/instagram.png
+    - assets/linkedin.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

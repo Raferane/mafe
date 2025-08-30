@@ -225,7 +225,7 @@ class AuthController extends GetxController {
     try {
       _isLoading.value = true;
       await FirebaseAuth.instance.signInAnonymously();
-      Get.offAllNamed('/home'); // or wherever you want to send the guest
+      Get.offAllNamed('/home');
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
         'Error',

@@ -6,7 +6,7 @@ class EventRepository {
     : _db = firestore ?? FirebaseFirestore.instance;
   final FirebaseFirestore _db;
 
-  Stream<List<Event>> WatchApprovedEvents() {
+  Stream<List<Event>> watchApprovedEvents() {
     return _db
         .collection('events')
         .where('isActive', isEqualTo: true)

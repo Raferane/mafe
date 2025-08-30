@@ -285,7 +285,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                       ),
                       SizedBox(height: height * 0.02),
-                      // Pending email verification banner
+                      // email verification banner
                       if (appService.user.value?.newTempEmail != null)
                         Container(
                           margin: EdgeInsets.only(bottom: height * 0.01),

@@ -12,7 +12,6 @@ import 'package:unity_project/Views/contact_us/contact_us_screen.dart';
 import 'package:unity_project/Views/home/home_components/event_detail.dart';
 import 'package:unity_project/Views/register/register_screen.dart';
 import 'package:unity_project/Views/Home/home_screen.dart';
-import 'package:unity_project/Views/settings/settings_screen.dart';
 import 'package:unity_project/models/bindings/admin_bindings.dart';
 import 'package:unity_project/models/bindings/auth_bindings.dart';
 import 'package:unity_project/models/bindings/home_bindings.dart';
@@ -20,51 +19,46 @@ import 'package:unity_project/middleware/auth_middleware.dart';
 import 'package:unity_project/models/bindings/edit_profile_binding.dart';
 import 'package:unity_project/models/events/events_model.dart';
 import 'package:unity_project/Views/about_us/about_us_screen.dart';
-import 'app_routes.dart';
 
 final List<GetPage> appPages = [
-  GetPage(name: AppRoutes.root, page: () => RootScreen()),
+  GetPage(name: '/', page: () => RootScreen()),
+  GetPage(name: '/login', page: () => LoginScreen(), binding: AuthBindings()),
   GetPage(
-    name: AppRoutes.login,
-    page: () => LoginScreen(),
-    binding: AuthBindings(),
-  ),
-  GetPage(
-    name: AppRoutes.register,
+    name: '/register',
     page: () => RegisterScreen(),
     binding: AuthBindings(),
   ),
   GetPage(
-    name: AppRoutes.home,
+    name: '/home',
     page: () => HomeScreen(),
     middlewares: [AuthMiddleware()],
     binding: HomeBinding(),
   ),
   GetPage(
-    name: AppRoutes.welcome,
+    name: '/welcome',
     page: () => WelcomeScreen(),
     binding: AuthBindings(),
   ),
   GetPage(
-    name: AppRoutes.adminpanel,
+    name: '/adminpanel',
     page: () => AdminPanelScreen(),
     binding: AdminBindings(),
   ),
-  GetPage(name: AppRoutes.profile, page: () => ProfileScreen()),
-  GetPage(name: AppRoutes.search, page: () => SearchScreen()),
-  GetPage(name: AppRoutes.favorites, page: () => FavoritesScreen()),
+  GetPage(name: '/profile', page: () => ProfileScreen()),
+  GetPage(name: '/search', page: () => SearchScreen()),
+  GetPage(name: '/favorites', page: () => FavoritesScreen()),
   GetPage(
-    name: AppRoutes.editProfile,
+    name: '/editProfile',
     page: () => EditProfileScreen(),
     binding: EditProfileBinding(),
   ),
-  GetPage(name: AppRoutes.adminpanel, page: () => AdminPanelScreen()),
+  GetPage(name: '/adminpanel', page: () => AdminPanelScreen()),
   GetPage(
-    name: AppRoutes.createEventScreen,
+    name: '/createEventScreen',
     page: () => CreateEventScreens(eventToEdit: Get.arguments as Event?),
   ),
-  GetPage(name: AppRoutes.settings, page: () => SettingsScreen()),
-  GetPage(name: AppRoutes.aboutus, page: () => AboutUsScreen()),
-  GetPage(name: AppRoutes.contactus, page: () => ContactUsScreen()),
-  GetPage(name: AppRoutes.eventDetail, page: () => EventDetail()),
+
+  GetPage(name: '/aboutus', page: () => AboutUsScreen()),
+  GetPage(name: '/contactus', page: () => ContactUsScreen()),
+  GetPage(name: '/eventDetail', page: () => EventDetail()),
 ];

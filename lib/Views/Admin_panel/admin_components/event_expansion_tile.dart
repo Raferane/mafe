@@ -15,6 +15,8 @@ class EventExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -62,7 +64,7 @@ class EventExpansionTile extends StatelessWidget {
                   color: Color(0xFF1E293B),
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: height * 0.005),
               Row(
                 children: [
                   const Icon(
@@ -70,7 +72,7 @@ class EventExpansionTile extends StatelessWidget {
                     size: 14,
                     color: Color(0xFF64748B),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: width * 0.01),
                   Expanded(
                     child: Text(
                       event.location,
@@ -86,7 +88,7 @@ class EventExpansionTile extends StatelessWidget {
             ],
           ),
           subtitle: Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: EdgeInsets.only(top: height * 0.01),
             child: Row(
               children: [
                 Container(
@@ -107,13 +109,13 @@ class EventExpansionTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: width * 0.02),
                 const Icon(
                   Icons.access_time,
                   size: 12,
                   color: Color(0xFF64748B),
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: width * 0.01),
                 Text(
                   _formatDateTime(event.dateTime),
                   style: const TextStyle(
@@ -133,7 +135,7 @@ class EventExpansionTile extends StatelessWidget {
                 color: Colors.grey[800]!,
                 onTap: onEdit,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: width * 0.02),
               _buildModernActionButton(
                 icon: Icons.delete_outline,
                 color: const Color(0xFFEF4444),
@@ -162,7 +164,7 @@ class EventExpansionTile extends StatelessWidget {
                       color: Color(0xFF1E293B),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: height * 0.01),
                   Text(
                     event.description,
                     style: const TextStyle(
@@ -171,7 +173,7 @@ class EventExpansionTile extends StatelessWidget {
                       height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: height * 0.02),
                   Row(
                     children: [
                       Expanded(
@@ -181,7 +183,7 @@ class EventExpansionTile extends StatelessWidget {
                           value: _formatDate(event.dateTime),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: width * 0.02),
                       Expanded(
                         child: _buildDetailItem(
                           icon: Icons.access_time,
@@ -191,7 +193,7 @@ class EventExpansionTile extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: height * 0.015),
                   Row(
                     children: [
                       Expanded(
@@ -201,7 +203,7 @@ class EventExpansionTile extends StatelessWidget {
                           value: event.location,
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: width * 0.02),
                       Expanded(
                         child: _buildDetailItem(
                           icon: Icons.people,
@@ -211,7 +213,7 @@ class EventExpansionTile extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: height * 0.025),
                   Row(
                     children: [
                       Expanded(
@@ -223,7 +225,9 @@ class EventExpansionTile extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(
+                              vertical: height * 0.015,
+                            ),
                           ),
                           icon: const Icon(Icons.edit_outlined, size: 18),
                           label: const Text(
@@ -232,7 +236,7 @@ class EventExpansionTile extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: width * 0.03),
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: onDelete,
@@ -242,9 +246,11 @@ class EventExpansionTile extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(
+                              vertical: height * 0.015,
+                            ),
                           ),
-                          icon: const Icon(Icons.delete_outline, size: 18),
+                          icon: const Icon(Icons.delete_forever, size: 18),
                           label: const Text(
                             'Delete',
                             style: TextStyle(fontWeight: FontWeight.w600),

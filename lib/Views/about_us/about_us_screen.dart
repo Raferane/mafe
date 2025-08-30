@@ -12,26 +12,14 @@ class AboutUsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xffedf2f4),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(0xffedf2f4),
+        surfaceTintColor: Color(0xffedf2f4),
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xff545454)),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'About Us',
-          style: TextStyle(
-            fontSize: width * 0.05,
-            fontWeight: FontWeight.bold,
-            color: Color(0xff545454),
-          ),
-        ),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: width * 0.05,
-          vertical: height * 0.02,
+          vertical: height * 0.03,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +176,7 @@ class AboutUsScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          SizedBox(height: height * 0.02),
           Text(
             content,
             style: TextStyle(
@@ -507,9 +495,6 @@ class AboutUsScreen extends StatelessWidget {
                   context,
                   icon: Icons.email,
                   label: 'Email Us',
-                  onTap: () {
-                    // Add email functionality
-                  },
                   width: width,
                 ),
               ),
@@ -519,9 +504,6 @@ class AboutUsScreen extends StatelessWidget {
                   context,
                   icon: Icons.phone,
                   label: 'Call Us',
-                  onTap: () {
-                    // Add phone functionality
-                  },
                   width: width,
                 ),
               ),
@@ -536,11 +518,9 @@ class AboutUsScreen extends StatelessWidget {
     BuildContext context, {
     required IconData icon,
     required String label,
-    required VoidCallback onTap,
     required double width,
   }) {
     return GestureDetector(
-      onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(

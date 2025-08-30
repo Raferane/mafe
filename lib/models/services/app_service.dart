@@ -114,7 +114,6 @@ class AppService extends GetxService {
       }
     } catch (e) {
       Get.log('Error handling email verification: $e');
-      // Don't throw here, just log the error
     }
   }
 

@@ -41,7 +41,7 @@ class RootScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Unity Volunteer Logo
-            Container(
+            SizedBox(
               width: 120,
               height: 120,
               child: Image.asset(
